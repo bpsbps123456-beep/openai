@@ -10,65 +10,36 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <style>
-/* Layout: '물'과 '바람' 두 부로 나뉜 현장 노트. 장면마다 글과 실험 화면이 좌우로 번갈아 놓이고, 화면 오른쪽 아래의 스위치 하나가 페이지 전체의 방정식을 켜고 끈다. */
+/* Layout: 두 개의 큰 3D 장면(물·바람)을 차례로 보여 주는 발표용 페이지. 각 장면 가운데의 막대를 끌면 왼쪽은 '방정식이 없을 때', 오른쪽은 '있을 때'가 된다. */
 :root {
   --paper: #EAEFF2;
   --panel: #F6F8F9;
-  --tank: #F3F6F7;
   --ink: #0E1C2A;
   --muted: #4B5C6C;
   --line: #C5D0D8;
   --accent: #2C4DA6;
-  --knob: #FFFFFF;
-  --solid: #AEBBC6;
-  --blue: #2C4DA6;
-  --teal: #08756A;
-  --amber-text: #9C5405;
-  --orange: #D5761A;
-  --hot: #C4331A;
-  --flow-slow: #2A5FD4;
-  --flow-mid: #8796A6;
-  --flow-fast: #D5761A;
-  --land: #D6DFCF;
-  --sea: #DCE8EE;
-  --oil: #1F2732;
-  --pitch: #C6DBC3;
-  --pitch-dark: #B9D1B5;
-  --pitch-line: #F4F8F3;
-  --vessel: #E3BDB3;
-  --plaque: #D8B04A;
-  --plasma: #F7ECE8;
-  --blood: #B3302A;
+  --with: #08756A;
+  --without: #C4331A;
   --font-display: "Hahmlet", "Noto Serif KR", "AppleMyungjo", serif;
   --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #0B131C; --panel: #111B26; --tank: #0D1822; --ink: #E2E9F0; --muted: #9AAAB9; --line: #26343F;
-    --accent: #8FA7F0; --knob: #E9EEF3; --solid: #52616F;
-    --blue: #8FA7F0; --teal: #4CC2B2; --amber-text: #EFA54B; --orange: #FFAE4A; --hot: #FF7A55;
-    --flow-slow: #6F9CFF; --flow-mid: #6E7E8E; --flow-fast: #FFAE4A;
-    --land: #1A2A22; --sea: #0E1F2C; --oil: #D8C7A6;
-    --pitch: #16281C; --pitch-dark: #132318; --pitch-line: #3F6049;
-    --vessel: #5A2E2B; --plaque: #957A2E; --plasma: #24151A; --blood: #E0584A;
+    --paper: #0B131C; --panel: #111B26; --ink: #E2E9F0; --muted: #9AAAB9; --line: #26343F;
+    --accent: #8FA7F0; --with: #4CC2B2; --without: #FF7A55;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #0B131C; --panel: #111B26; --tank: #0D1822; --ink: #E2E9F0; --muted: #9AAAB9; --line: #26343F;
-  --accent: #8FA7F0; --knob: #E9EEF3; --solid: #52616F;
-  --blue: #8FA7F0; --teal: #4CC2B2; --amber-text: #EFA54B; --orange: #FFAE4A; --hot: #FF7A55;
-  --flow-slow: #6F9CFF; --flow-mid: #6E7E8E; --flow-fast: #FFAE4A;
-  --land: #1A2A22; --sea: #0E1F2C; --oil: #D8C7A6;
-  --pitch: #16281C; --pitch-dark: #132318; --pitch-line: #3F6049;
-  --vessel: #5A2E2B; --plaque: #957A2E; --plasma: #24151A; --blood: #E0584A;
+  --paper: #0B131C; --panel: #111B26; --ink: #E2E9F0; --muted: #9AAAB9; --line: #26343F;
+  --accent: #8FA7F0; --with: #4CC2B2; --without: #FF7A55;
   color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
@@ -77,429 +48,238 @@ body {
 }
 a { color: var(--accent); text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-.num { font-variant-numeric: tabular-nums; }
-.wrap { max-width: 1200px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); }
+p { margin: 0 0 1em; }
 
 .topbar {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
   background: var(--paper); background: color-mix(in srgb, var(--paper) 90%, transparent);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
 }
-.topbar-inner { display: flex; align-items: center; gap: 16px; min-height: 54px; }
+.topbar-inner { display: flex; align-items: center; gap: 16px; min-height: 52px; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--ink); text-decoration: none; white-space: nowrap; }
-.toplinks { display: flex; align-items: center; gap: 2px; margin-left: auto; overflow-x: auto; min-width: 0; scrollbar-width: none; }
-.toplinks::-webkit-scrollbar { display: none; }
-.toplinks a { font-size: .875rem; color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
+.toplinks { display: flex; gap: 2px; margin-left: auto; overflow-x: auto; min-width: 0; scrollbar-width: none; }
+.toplinks a { font-size: .9rem; color: var(--muted); text-decoration: none; padding: 6px 11px; border-radius: 999px; white-space: nowrap; }
 .toplinks a:hover { color: var(--ink); background: var(--panel); }
-.toplinks .grp { font: 500 .72rem var(--font-mono); color: var(--accent); padding: 0 4px 0 12px; white-space: nowrap; }
-@media (max-width: 640px) { .brand { display: none; } .toplinks { margin-left: 0; } }
 
-.eyebrow, .tag { font-family: var(--font-mono); font-size: .8125rem; letter-spacing: .06em; color: var(--muted); margin: 0; }
-.tag { color: var(--accent); font-weight: 500; }
-h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.8rem, 7vw, 5.2rem); line-height: 1.06; letter-spacing: -.04em; margin: .25em 0 .4em; text-wrap: balance; }
-h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.7rem, 3.2vw, 2.5rem); line-height: 1.3; letter-spacing: -.02em; margin: .35em 0 .5em; text-wrap: balance; }
-h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.4; margin: 0; }
-p { margin: 0 0 1em; }
-.lede { font-size: clamp(1.05rem, 1.5vw, 1.22rem); color: var(--muted); max-width: 30em; }
-.lede strong { color: var(--ink); font-weight: 600; }
-.fineprint { font-size: .85rem; color: var(--muted); line-height: 1.65; }
-
-.btn { display: inline-flex; align-items: center; gap: .4em; padding: .66em 1.1em; border-radius: 10px; background: var(--ink); color: var(--paper); font: 600 .96rem var(--font-body); text-decoration: none; border: 1px solid var(--ink); cursor: pointer; }
-.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
-.btn.ghost:hover { border-color: var(--ink); }
-.btn:disabled { opacity: .5; cursor: default; }
-
-/* 스위치 */
-.switch { --c: var(--teal); display: inline-flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; font: inherit; color: var(--ink); cursor: pointer; }
-.switch .track { width: 46px; height: 27px; border-radius: 999px; background: var(--line); position: relative; transition: background-color .2s; flex: none; }
-.switch .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 21px; height: 21px; border-radius: 50%; background: var(--knob); box-shadow: 0 1px 3px rgb(0 0 0 / .28); transition: transform .2s; }
-.switch[aria-checked="true"] .track { background: var(--c); }
-.switch[aria-checked="true"] .track::after { transform: translateX(19px); }
-.sw-label { font-weight: 600; font-size: .95rem; white-space: nowrap; }
-.eqdock {
-  position: fixed; z-index: 40; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; border-radius: 999px;
-  background: var(--panel); border: 1px solid var(--line); box-shadow: 0 6px 24px rgb(0 0 0 / .16);
-}
-.eq-off .eqdock { border-color: var(--hot); }
-.eq-off .eqdock .sw-label { color: var(--hot); }
-@media (max-width: 600px) { .eqdock { right: 12px; padding: 7px 12px 7px 9px; } .eqdock .sw-label { font-size: .85rem; } .eqdock .track { transform: scale(.85); } }
+.tag { font-family: var(--font-mono); font-size: .8125rem; letter-spacing: .06em; color: var(--accent); font-weight: 500; margin: 0; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.8rem, 7vw, 5.2rem); line-height: 1.06; letter-spacing: -.04em; margin: .2em 0 .35em; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 3.6vw, 2.8rem); line-height: 1.25; letter-spacing: -.02em; margin: .25em 0 0; text-wrap: balance; }
+h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; margin: 0 0 8px; }
 
 /* 히어로 */
-.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 56px); align-items: center; padding-block: clamp(28px, 5vw, 64px) clamp(56px, 8vw, 96px); }
-@media (max-width: 880px) { .hero { grid-template-columns: minmax(0, 1fr); } }
-.hero-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.hero { padding-block: clamp(36px, 6vw, 80px) clamp(40px, 6vw, 72px); }
+.hero .lede { font-size: clamp(1.08rem, 1.6vw, 1.3rem); color: var(--muted); max-width: 34em; }
+.hero .lede strong { color: var(--ink); font-weight: 600; }
+.picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 30px; max-width: 900px; }
+@media (max-width: 640px) { .picks { grid-template-columns: minmax(0, 1fr); } }
+.pick { display: grid; gap: 4px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); text-decoration: none; color: var(--ink); transition: border-color .2s, transform .2s; }
+.pick:hover { border-color: var(--ink); transform: translateY(-2px); }
+.pick .big { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1; letter-spacing: -.04em; }
+.pick .q { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; margin-top: 8px; }
+.pick .d { color: var(--muted); font-size: .95rem; }
+.howto { display: flex; align-items: center; gap: 14px; margin-top: 28px; color: var(--muted); font-size: .98rem; flex-wrap: wrap; }
+.howto .mini { display: inline-flex; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); font: 600 .8rem var(--font-body); }
+.howto .mini span { padding: 4px 10px; }
+.howto .mini .l { background: color-mix(in srgb, var(--without) 14%, var(--panel)); color: var(--without); }
+.howto .mini .r { background: color-mix(in srgb, var(--with) 14%, var(--panel)); color: var(--with); border-left: 2px solid var(--ink); }
 
-/* 실험 화면 */
-.stage { position: relative; margin: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--tank); overflow: hidden; transition: border-color .2s; }
-.eq-off .stage { border-color: color-mix(in srgb, var(--hot) 55%, var(--line)); }
-.stage canvas { display: block; width: 100%; }
-.hero .stage canvas { height: clamp(300px, 50vh, 540px); }
-.stir { touch-action: none; cursor: crosshair; }
-.hint {
-  position: absolute; left: 12px; top: 12px; pointer-events: none;
-  font: 500 .75rem/1 var(--font-mono); color: var(--muted);
-  background: var(--panel); background: color-mix(in srgb, var(--panel) 86%, transparent); padding: 7px 10px; border-radius: 6px;
-}
-.stage-note {
-  display: none; position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); width: min(90%, 24em);
-  padding: 9px 14px; border-radius: 10px; text-align: center; font-size: .92rem; font-weight: 600; line-height: 1.5;
-  background: var(--panel); border: 1px solid var(--hot); color: var(--hot); pointer-events: none;
-}
-.eq-off .stage-note { display: block; }
-.hero .stage-note { bottom: 54px; }
-.stage-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; padding: 9px 14px; border-top: 1px solid var(--line); background: var(--panel); font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
-.stage-meta b { color: var(--ink); font-weight: 500; }
-.ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 14px; }
+/* 장면 */
+.scene { padding-block: clamp(56px, 8vw, 100px); border-top: 1px solid var(--line); }
+.scene-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px 48px; align-items: end; margin-bottom: 26px; }
+@media (max-width: 860px) { .scene-head { grid-template-columns: minmax(0, 1fr); } }
+.scene-head .big { font-family: var(--font-display); font-weight: 800; font-size: clamp(3.4rem, 9vw, 6rem); line-height: .9; letter-spacing: -.05em; margin: 0 0 .1em; }
+.scene-lede { color: var(--muted); margin: 0; max-width: 34em; }
+
+.ba { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #D8E4EC; user-select: none; -webkit-user-select: none; }
+.ba canvas { display: block; width: 100%; height: clamp(400px, 68vh, 700px); touch-action: pan-y; cursor: grab; }
+@media (max-width: 700px) { .ba canvas { height: 84vh; min-height: 520px; } }
+.ba canvas.grabbing { cursor: grabbing; }
+.ba-label { position: absolute; top: 14px; left: 14px; max-width: calc(50% - 28px); padding: 10px 14px; border-radius: 12px; background: rgba(255, 255, 255, .93); color: #0E1C2A; font-size: .92rem; line-height: 1.5; pointer-events: none; box-shadow: 0 2px 10px rgb(0 0 0 / .12); }
+.ba-label b { display: block; font-size: .78rem; font-family: var(--font-mono); letter-spacing: .04em; margin-bottom: 2px; }
+.ba-label.off { border-top: 4px solid #C4331A; }
+.ba-label.off b { color: #C4331A; }
+.ba-label.on { border-top: 4px solid #08756A; }
+.ba-label.on b { color: #08756A; }
+.ba.h .ba-label.on { left: calc(50% + 14px); }
+.ba.v .ba-label { max-width: calc(100% - 28px); }
+.ba.v .ba-label.on { top: calc(50% + 12px); }
+.ba.only-on .ba-label.off, .ba.only-off .ba-label.on { display: none; }
+.ba.only-on .ba-label, .ba.only-off .ba-label { max-width: min(26em, calc(100% - 28px)); }
+.ba-sep { position: absolute; background: #FFFFFF; box-shadow: 0 0 0 1px rgb(0 0 0 / .18); pointer-events: none; }
+.ba.h .ba-sep { top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; }
+.ba.v .ba-sep { left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; }
+.ba.only-on .ba-sep, .ba.only-off .ba-sep { display: none; }
+.ba-time { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); padding: 6px 14px; border-radius: 999px; background: rgba(14, 28, 42, .85); color: #FFFFFF; font: 500 .85rem var(--font-mono); pointer-events: none; white-space: nowrap; }
+.ba.v .ba-time { bottom: auto; top: 50%; transform: translate(-50%, -50%); }
+.no3d-msg { display: none; }
+.no3d .no3d-msg { display: flex; position: absolute; inset: 0; align-items: center; justify-content: center; padding: 24px; text-align: center; color: #4B5C6C; background: #D8E4EC; margin: 0; }
+@media (max-width: 600px) { .ba-label { font-size: .8rem; padding: 8px 10px; } .ba-label b { font-size: .72rem; } }
+
+.ba-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 14px; }
 .seg { display: inline-flex; flex-wrap: wrap; padding: 3px; border: 1px solid var(--line); border-radius: 11px; background: var(--panel); gap: 2px; }
 .seg button { font: 600 .92rem var(--font-body); border: 0; background: transparent; color: var(--muted); padding: .45em .95em; border-radius: 8px; cursor: pointer; }
 .seg button[aria-checked="true"] { background: var(--ink); color: var(--paper); }
-.eqseg button[data-eq="off"][aria-checked="true"] { background: var(--hot); color: #FFFFFF; }
-.slider { display: flex; align-items: center; gap: 10px; font-size: .95rem; color: var(--muted); flex-wrap: wrap; }
-.slider input { width: 160px; accent-color: var(--accent); }
-.readout { font-size: .98rem; margin: 0; }
-.readout b { font-family: var(--font-display); font-weight: 700; }
-.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px; border-radius: 999px; font: 600 .86rem var(--font-body); border: 1px solid currentColor; white-space: nowrap; }
-.chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.chip.good { color: var(--teal); } .chip.warn { color: var(--amber-text); } .chip.bad { color: var(--hot); } .chip.unknown { color: var(--muted); }
-.no3d-msg { display: none; }
-.no3d .no3d-msg { display: flex; position: absolute; inset: 0; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--muted); background: var(--tank); margin: 0; }
+.btn { display: inline-flex; align-items: center; gap: .4em; padding: .55em 1em; border-radius: 10px; background: transparent; color: var(--ink); font: 600 .92rem var(--font-body); border: 1px solid var(--line); cursor: pointer; }
+.btn:hover { border-color: var(--ink); }
+.hintline { font-size: .88rem; color: var(--muted); }
 
-/* 있으면 / 없으면 */
-.cmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 20px 0 0; }
-.cmp > div { padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--panel); transition: opacity .25s, border-color .25s; }
-.cmp b { display: block; font: 600 .8rem var(--font-mono); letter-spacing: .04em; margin-bottom: 4px; }
-.cmp p { margin: 0; font-size: .95rem; line-height: 1.6; }
-.cmp .with { border-color: var(--teal); }
-.cmp .with b { color: var(--teal); }
-.cmp .without { opacity: .5; }
-.cmp .without b { color: var(--hot); }
-.eq-off .cmp .with { opacity: .5; border-color: var(--line); }
-.eq-off .cmp .without { opacity: 1; border-color: var(--hot); }
-@media (max-width: 420px) { .cmp { grid-template-columns: minmax(0, 1fr); } }
-.hero .cmp { max-width: 34em; }
-
-/* 핵심 한 줄 */
-.idea { padding-block: clamp(56px, 8vw, 104px); border-top: 1px solid var(--line); }
-.idea h2 { font-size: clamp(1.9rem, 4vw, 3.1rem); max-width: 17em; }
-.idea-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 44px; margin-top: 36px; }
-@media (max-width: 760px) { .idea-grid { grid-template-columns: minmax(0, 1fr); } }
-.idea-grid > div { border-top: 2px solid var(--ink); padding-top: 16px; }
-.idea-grid h3 { font-size: 1.4rem; margin-bottom: 8px; }
-.idea-grid p { color: var(--muted); margin: 0; }
-
-/* 부 표지 */
-.part { border-top: 1px solid var(--line); padding-block: clamp(56px, 8vw, 96px) 0; }
-.part-inner { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 32px; }
-.part-mark { font-family: var(--font-display); font-weight: 800; font-size: clamp(4rem, 13vw, 9rem); line-height: .9; letter-spacing: -.05em; margin: 0; }
-.part-sub { color: var(--muted); max-width: 26em; margin: 0 0 .6em; font-size: 1.05rem; }
-
-/* 장면 */
-.scene-wrap { padding-block: clamp(56px, 8vw, 104px); }
-.scene-wrap + .scene-wrap { border-top: 1px dashed var(--line); }
-.scene { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 60px); align-items: center; }
-.scene.flip > .scene-text { order: 2; }
-@media (max-width: 900px) { .scene { grid-template-columns: minmax(0, 1fr); } .scene.flip > .scene-text { order: 0; } }
-.scene-text > p { max-width: 32em; }
-.real { margin-top: 16px; font-size: .92rem; color: var(--muted); }
+.diff { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+@media (max-width: 700px) { .diff { grid-template-columns: minmax(0, 1fr); } }
+.diff > div { padding: 18px 20px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); }
+.diff .wo { border-top: 4px solid var(--without); }
+.diff .w { border-top: 4px solid var(--with); }
+.diff h3 { font-family: var(--font-mono); font-weight: 600; font-size: .82rem; letter-spacing: .04em; }
+.diff .wo h3 { color: var(--without); } .diff .w h3 { color: var(--with); }
+.diff ol { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; font-size: .98rem; line-height: 1.6; }
+.real { margin-top: 18px; font-size: .95rem; color: var(--muted); max-width: 52em; }
 .real b { color: var(--ink); font-weight: 600; }
 
-.meter { display: grid; gap: 6px; min-width: min(100%, 240px); flex: 1 1 240px; }
-.meter-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: .9rem; color: var(--muted); }
-.meter-bar { height: 12px; border-radius: 6px; background: color-mix(in srgb, var(--line) 70%, transparent); overflow: hidden; }
-.meter-bar i { display: block; height: 100%; width: 50%; border-radius: 6px; background: var(--orange); transition: width .4s, background-color .4s; }
-
-.drag { display: grid; gap: 8px; margin-top: 16px; }
-.drag-row { display: grid; grid-template-columns: 6.5em minmax(0, 1fr) 2.6em; align-items: center; gap: 12px; font-size: .95rem; transition: opacity .2s; }
-.drag-row:not(.is-on) { opacity: .5; }
-.drag-bar { height: 12px; background: color-mix(in srgb, var(--line) 60%, transparent); border-radius: 3px; overflow: hidden; }
-.drag-bar i { display: block; height: 100%; background: var(--ink); border-radius: 3px; transition: width .3s; }
-.drag-val { font-family: var(--font-mono); font-size: .9rem; text-align: right; }
-.eq-off .drag-bar i { width: 0 !important; }
-.eq-off .drag-val { visibility: hidden; }
-.eq-off .drag-val::before { content: "?"; visibility: visible; }
-
 /* 정리 */
-.recap-sec { padding-block: clamp(64px, 9vw, 112px); border-top: 1px solid var(--line); }
-.recap-wrap { overflow-x: auto; margin-top: 26px; }
-.recap { width: 100%; min-width: 0; border-collapse: collapse; table-layout: fixed; font-size: .98rem; line-height: 1.55; }
-.recap th, .recap td { padding: 13px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-.recap thead th { font: 600 .82rem var(--font-mono); letter-spacing: .04em; border-bottom: 2px solid var(--ink); }
-.recap thead th.w { color: var(--teal); } .recap thead th.wo { color: var(--hot); }
-.recap tbody th { font-family: var(--font-display); font-weight: 700; width: 7.5em; }
-.recap td.wo { color: var(--muted); }
-@media (max-width: 520px) { .recap { font-size: .9rem; } .recap th, .recap td { padding: 10px 8px; } .recap tbody th { width: 5.2em; } }
-.closing-big { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.5rem); line-height: 1.4; letter-spacing: -.02em; max-width: 21em; margin: 56px 0 18px; text-wrap: balance; }
-.closing-sub { color: var(--muted); max-width: 38em; }
-footer { padding-block: 28px 96px; border-top: 1px solid var(--line); }
+.closing { padding-block: clamp(56px, 8vw, 100px); border-top: 1px solid var(--line); }
+.closing-big { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.5rem); line-height: 1.4; letter-spacing: -.02em; max-width: 21em; margin: 12px 0 40px; text-wrap: balance; }
+.qa { max-width: 44em; padding: 22px 24px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); }
+.qa h3 { font-size: 1.2rem; margin-bottom: 10px; }
+.qa p { color: var(--muted); margin: 0 0 .8em; }
+.qa p:last-child { margin: 0; }
+.qa strong { color: var(--ink); font-weight: 600; }
+footer { padding-block: 28px 56px; border-top: 1px solid var(--line); }
+.fineprint { font-size: .85rem; color: var(--muted); line-height: 1.65; margin: 0; }
 </style>
 
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a class="brand" href="#top">물과 바람의 방정식</a>
     <nav class="toplinks" aria-label="장면 바로가기">
-      <span class="grp">물</span><a href="#sea">바다</a><a href="#hospital">혈관</a>
-      <span class="grp">바람</span><a href="#room">교실</a><a href="#weather">태풍</a><a href="#vehicle">자동차</a><a href="#sports">축구</a>
-      <a href="#recap">정리</a>
+      <a href="#oil">물 · 기름 유출</a>
+      <a href="#storm">바람 · 태풍</a>
+      <a href="#closing">정리</a>
     </nav>
   </div>
 </header>
 
-<div class="eqdock">
-  <button type="button" class="switch" id="eqSwitch" role="switch" aria-checked="true" aria-label="방정식 켜고 끄기"><span class="track"></span><span class="sw-label">방정식 켜짐</span></button>
-</div>
-
 <main id="top">
   <section class="wrap hero">
-    <div>
-      <p class="eyebrow">교사 연수 자료</p>
-      <h1>물과 바람의 방정식</h1>
-      <p class="lede">세상의 물과 바람은 모두 같은 규칙을 따라 움직입니다. 그 규칙을 식 하나로 적은 것이 <strong>물과 바람의 방정식</strong>, 뉴스에 나온 나비에-스토크스 방정식입니다.</p>
-      <p class="lede">수조를 휘저어 보세요. 그다음 오른쪽 아래 스위치로 <strong>방정식을 꺼 보세요.</strong></p>
-      <div class="cmp">
-        <div class="with"><b>방정식이 있으면</b><p>물감이 소용돌이치며 진짜 물처럼 퍼집니다. 영화 속 물과 연기도 이렇게 만듭니다.</p></div>
-        <div class="without"><b>방정식이 없으면</b><p>컴퓨터는 물이 어떻게 움직일지 모릅니다. 물감이 칠한 자리에 멈춰 있습니다.</p></div>
-      </div>
+    <p class="tag">교사 연수 자료</p>
+    <h1>물과 바람의 방정식</h1>
+    <p class="lede">세상의 물과 바람이 따르는 규칙을 식 하나로 적은 것이 <strong>물과 바람의 방정식</strong>(나비에-스토크스 방정식)입니다. 이 식을 컴퓨터로 풀면 물과 바람이 <strong>어디로 갈지 미리</strong> 볼 수 있습니다.</p>
+    <p class="lede">대표 장면 두 개로, 이 식이 있을 때와 없을 때를 나란히 비교해 봅니다.</p>
+    <div class="picks">
+      <a class="pick" href="#oil"><span class="big">물</span><span class="q">바다에 쏟아진 기름은 어디로 갈까?</span><span class="d">해류를 계산하면 기름이 닿을 해안을 미리 알고 막을 수 있습니다.</span></a>
+      <a class="pick" href="#storm"><span class="big">바람</span><span class="q">태풍은 어디로 올까?</span><span class="d">바람을 계산하면 사흘 전부터 태풍의 길을 알고 대비할 수 있습니다.</span></a>
     </div>
-    <figure class="stage">
-      <canvas id="heroCanvas" class="stir" aria-label="마우스나 손가락으로 저을 수 있는 물감 수조"></canvas>
-      <span class="hint">휘저어 보세요</span>
-      <span class="stage-note">방정식 꺼짐 · 물이 어떻게 움직일지 모릅니다</span>
-      <figcaption class="stage-meta"><span>물감 수조</span><span>컴퓨터가 식을 푼 횟수 <b id="heroSteps" class="num">0번</b></span></figcaption>
-    </figure>
+    <div class="howto">
+      <span class="mini" aria-hidden="true"><span class="l">없으면</span><span class="r">있으면</span></span>
+      <span>각 장면은 같은 상황을 두 세상으로 나란히 보여 줍니다. 왼쪽(휴대폰은 위쪽)은 방정식이 없을 때, 오른쪽(아래쪽)은 있을 때입니다. 장면을 끌면 두 화면이 함께 돌아갑니다.</span>
+    </div>
   </section>
 
-  <section class="idea">
+  <section class="scene" id="oil">
     <div class="wrap">
-      <p class="tag">한 줄 요약</p>
-      <h2>이 방정식이 있으면, 물과 바람이 어디로 갈지 미리 보입니다</h2>
-      <div class="idea-grid">
-        <div>
-          <h3>보이지 않는 흐름이 보인다</h3>
-          <p>공기와 물속의 흐름은 눈에 보이지 않습니다. 방정식을 풀면 교실 공기, 혈관 속 피, 차 옆을 스치는 바람이 어떻게 흐르는지 눈으로 볼 수 있습니다.</p>
+      <div class="scene-head">
+        <div><p class="big">물</p><h2>바다에 쏟아진 기름은 어디로 갈까?</h2></div>
+        <p class="scene-lede">유조선에서 기름이 새어 나왔습니다. 기름은 눈에 보이지 않는 바닷물의 흐름(해류)을 타고 해안 마을 쪽으로 밀려갑니다. 같은 사고가 두 세상에서 어떻게 끝나는지 나란히 보세요.</p>
+      </div>
+      <div class="ba h" id="oilStage">
+        <canvas aria-label="기름 유출 3D 장면. 방정식이 없을 때와 있을 때를 나란히 보여 줍니다"></canvas>
+        <span class="ba-sep" aria-hidden="true"></span>
+        <div class="ba-label off"><b>방정식이 없으면</b><span data-status="off">기름이 어디로 갈지 모릅니다</span></div>
+        <div class="ba-label on"><b>방정식이 있으면</b><span data-status="on">해류를 계산해 닿을 해안을 예측합니다</span></div>
+        <div class="ba-time" data-time>사고 직후</div>
+        <p class="no3d-msg">3D 장면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</p>
+      </div>
+      <div class="ba-ctl">
+        <div class="seg" role="radiogroup" aria-label="보기">
+          <button type="button" role="radio" aria-checked="false" data-view="off">없으면만</button>
+          <button type="button" role="radio" aria-checked="true" data-view="both">나란히 비교</button>
+          <button type="button" role="radio" aria-checked="false" data-view="on">있으면만</button>
         </div>
-        <div>
-          <h3>아직 오지 않은 내일이 보인다</h3>
-          <p>태풍과 바다 위 기름띠가 내일 어디에 있을지 계산합니다. 방정식이 없으면 직접 만들어 보고, 겪어 보고 나서야 압니다.</p>
+        <button type="button" class="btn" data-replay>처음부터 다시</button>
+        <span class="hintline">사고 후 약 나흘을 30여 초로 보여 줍니다.</span>
+      </div>
+      <div class="diff">
+        <div class="wo">
+          <h3>방정식이 없으면</h3>
+          <ol>
+            <li>바닷물이 어느 쪽으로 흐르는지 보이지 않습니다.</li>
+            <li>기름이 어디로 갈지 몰라 손을 쓸 곳을 정하지 못합니다.</li>
+            <li>기름이 해변과 마을을 덮친 뒤에야 알게 됩니다.</li>
+          </ol>
+        </div>
+        <div class="w">
+          <h3>방정식이 있으면</h3>
+          <ol>
+            <li>물길(해류)을 계산해 화살표처럼 보여 줍니다.</li>
+            <li>내일 기름이 갈 곳(파란 점)과 닿을 해안(빨간 선)을 미리 압니다.</li>
+            <li>그 앞바다에 오일펜스를 쳐서 기름을 바다에서 막습니다.</li>
+          </ol>
         </div>
       </div>
+      <p class="real"><b>실제로는</b> 해양 연구 기관이 기름 유출 사고 때 해류와 바람을 계산해 기름띠가 퍼질 길을 예측하고, 방제선과 오일펜스를 보낼 곳을 정합니다. 바다 쓰레기, 적조, 실종자 수색 범위를 예측할 때도 같은 계산을 씁니다.</p>
     </div>
   </section>
 
-  <!-- ================= 물 ================= -->
-  <section class="part">
-    <div class="wrap part-inner">
-      <p class="part-mark">물</p>
-      <p class="part-sub">바다의 물길부터 우리 몸속을 흐르는 피까지. 피도 물처럼 이 방정식을 따릅니다.</p>
-    </div>
-  </section>
-
-  <section class="scene-wrap" id="sea">
-    <div class="wrap scene">
-      <div class="scene-text">
-        <p class="tag">물 · 바다</p>
-        <h2>바다에 기름이 쏟아지면 어디로 밀려갈까?</h2>
-        <p>배에서 기름이 새어 나왔습니다. 기름은 바닷물의 흐름(해류)을 타고 떠밀려 갑니다. 해류는 눈에 보이지 않지만, 방정식을 풀면 그 길이 보입니다.</p>
-        <div class="cmp">
-          <div class="with"><b>방정식이 있으면</b><p>물길이 보이고, 내일 기름이 닿을 해안을 미리 알아 방제선을 먼저 보냅니다.</p></div>
-          <div class="without"><b>방정식이 없으면</b><p>기름이 어디로 갈지 모릅니다. 해안이 까맣게 된 뒤에야 알게 됩니다.</p></div>
-        </div>
-        <p class="real"><b>실제로는</b> 기름 유출 사고 대응, 바다 쓰레기와 적조가 퍼지는 길, 수색 구조 범위 예측에 씁니다.</p>
-      </div>
-      <div>
-        <figure class="stage">
-          <canvas id="seaCanvas" style="aspect-ratio: 16 / 10" aria-label="바다 위에서 기름띠가 해류를 타고 해안으로 밀려가는 모습"></canvas>
-          <span class="stage-note">방정식 꺼짐 · 물길도, 기름이 갈 곳도 모릅니다</span>
-        </figure>
-        <div class="ctl">
-          <div class="seg eqseg" role="radiogroup" aria-label="방정식"><button type="button" role="radio" aria-checked="true" data-eq="on">방정식 있음</button><button type="button" role="radio" aria-checked="false" data-eq="off">없음</button></div>
-          <span class="chip good" id="seaChip">예측 중</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene-wrap" id="hospital">
-    <div class="wrap scene flip">
-      <div class="scene-text">
-        <p class="tag">물 · 병원</p>
-        <h2>혈관이 좁아지면 피는 어떻게 흐를까?</h2>
-        <p>호스 끝을 손가락으로 누르면 물이 세게 뿜어져 나오죠? 혈관에 찌꺼기(플라크)가 쌓여 좁아져도 피가 그렇게 빨라집니다. 빨라진 피는 혈관 벽을 세게 긁고, 좁은 곳 뒤에서는 피가 뭉치기 쉬워집니다.</p>
-        <div class="cmp">
-          <div class="with"><b>방정식이 있으면</b><p>CT 사진만으로 피가 얼마나 빨라지는지, 얼마나 위험한지 계산합니다.</p></div>
-          <div class="without"><b>방정식이 없으면</b><p>가느다란 관을 혈관 속에 직접 넣어서 재야 합니다.</p></div>
-        </div>
-        <p class="real"><b>실제로는</b> 심장 혈관 CT 분석, 스텐트와 인공 심장판막 설계, 수술 계획에 씁니다.</p>
-      </div>
-      <div>
-        <figure class="stage">
-          <canvas id="bloodCanvas" style="aspect-ratio: 21 / 9; min-height: 170px" aria-label="좁아진 혈관 속을 흐르는 적혈구"></canvas>
-          <span class="stage-note">방정식 꺼짐 · 피가 어떻게 흐르는지 알 수 없습니다</span>
-        </figure>
-        <div class="ctl">
-          <label class="slider" for="rg-narrow">좁아진 정도 <input type="range" id="rg-narrow" min="0" max="70" value="45"></label>
-          <div class="seg eqseg" role="radiogroup" aria-label="방정식"><button type="button" role="radio" aria-checked="true" data-eq="on">방정식 있음</button><button type="button" role="radio" aria-checked="false" data-eq="off">없음</button></div>
-        </div>
-        <p class="readout" id="bloodRead" style="margin-top: 12px"></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 바람 ================= -->
-  <section class="part">
-    <div class="wrap part-inner">
-      <p class="part-mark">바람</p>
-      <p class="part-sub">공기도 물처럼 흐릅니다. 같은 방정식이 교실의 공기부터 태풍까지 설명합니다.</p>
-    </div>
-  </section>
-
-  <section class="scene-wrap" id="room">
-    <div class="wrap scene">
-      <div class="scene-text">
-        <p class="tag">바람 · 교실</p>
-        <h2>창문, 어떻게 열어야 공기가 빨리 바뀔까?</h2>
-        <p>주황색은 학생들이 내쉰 숨, 초록색은 바깥에서 들어온 공기입니다. 창문을 닫기, 한쪽만 열기, 맞통풍을 차례로 눌러 보세요. 마주 보는 창문을 열면 공기가 교실을 가로질러 훨씬 빨리 맑아집니다.</p>
-        <div class="cmp">
-          <div class="with"><b>방정식이 있으면</b><p>숨이 어디로 가는지 보입니다. 어느 창문을 열어야 할지 미리 압니다.</p></div>
-          <div class="without"><b>방정식이 없으면</b><p>공기는 눈에 보이지 않습니다. 창문은 감으로 엽니다.</p></div>
-        </div>
-        <p class="real"><b>실제로는</b> 학교·병원·지하철역 환기 설계, 음압병실, 기침 침방울이 퍼지는 거리 연구에 씁니다.</p>
-      </div>
-      <div>
-        <figure class="stage">
-          <canvas id="roomCanvas" style="aspect-ratio: 2.1 / 1; min-height: 200px; touch-action: pan-y" aria-label="교실 단면에서 공기가 흐르는 모습"></canvas>
-          <span class="stage-note">방정식 꺼짐 · 공기가 보이지 않습니다</span>
-        </figure>
-        <div class="ctl">
-          <div class="seg" role="radiogroup" aria-label="창문 상태" id="roomSeg">
-            <button type="button" role="radio" aria-checked="true" data-mode="closed">창문 닫기</button>
-            <button type="button" role="radio" aria-checked="false" data-mode="one">한쪽만 열기</button>
-            <button type="button" role="radio" aria-checked="false" data-mode="cross">맞통풍</button>
-          </div>
-          <div class="seg eqseg" role="radiogroup" aria-label="방정식"><button type="button" role="radio" aria-checked="true" data-eq="on">방정식 있음</button><button type="button" role="radio" aria-checked="false" data-eq="off">없음</button></div>
-          <div class="meter">
-            <div class="meter-top"><span>교실 속 내쉰 숨</span><span id="roomState" class="chip warn">답답해요</span></div>
-            <div class="meter-bar"><i id="roomBar"></i></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene-wrap" id="weather">
-    <div class="wrap scene flip">
-      <div class="scene-text">
-        <p class="tag">바람 · 날씨</p>
-        <h2>태풍은 내일 어디로 갈까?</h2>
-        <p>기상청은 지구를 덮은 공기를 수많은 작은 상자로 나누고, 상자마다 바람이 어떻게 바뀔지 이 방정식(을 날씨에 맞게 고친 식)으로 계산합니다. 슈퍼컴퓨터가 매일 하는 일입니다.</p>
-        <div class="cmp">
-          <div class="with"><b>방정식이 있으면</b><p>며칠 뒤 태풍이 지나갈 길을 미리 알고 대비합니다.</p></div>
-          <div class="without"><b>방정식이 없으면</b><p>하늘과 경험으로 짐작할 뿐입니다. 태풍이 코앞에 와서야 압니다.</p></div>
-        </div>
-        <p class="real"><b>실제로는</b> 매일의 일기예보, 태풍 진로, 미세먼지 예보, 비행기 항로에 씁니다.</p>
-      </div>
-      <div>
-        <figure class="stage">
-          <canvas id="stormCanvas" style="aspect-ratio: 16 / 10" aria-label="바다 위에서 반시계 방향으로 도는 태풍과 예상 경로"></canvas>
-          <span class="stage-note">방정식 꺼짐 · 태풍이 어디로 갈지 모릅니다</span>
-        </figure>
-        <div class="ctl">
-          <div class="seg eqseg" role="radiogroup" aria-label="방정식"><button type="button" role="radio" aria-checked="true" data-eq="on">방정식 있음</button><button type="button" role="radio" aria-checked="false" data-eq="off">없음</button></div>
-          <span class="fineprint" style="margin: 0">선의 색은 바람 세기입니다. 가운데로 갈수록 셉니다.</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene-wrap" id="vehicle">
-    <div class="wrap scene">
-      <div class="scene-text">
-        <p class="tag">바람 · 자동차 · 기차 · 비행기</p>
-        <h2>왜 다들 매끈한 모양일까?</h2>
-        <p>컴퓨터 속 바람 터널(풍동)입니다. 공 모양과 물방울 모양을 바꿔 보고, 끌어서 돌려 보세요. <span id="shapeNote"></span></p>
-        <div class="drag" aria-label="공기 저항 비교">
-          <div class="drag-row is-on" data-shape="sphere"><span>공 모양</span><span class="drag-bar"><i style="width: 100%"></i></span><span class="drag-val">100</span></div>
-          <div class="drag-row" data-shape="tear"><span>물방울 모양</span><span class="drag-bar"><i style="width: 9%"></i></span><span class="drag-val">9</span></div>
-          <span class="fineprint">공기 저항 비교. 공을 100이라 하면 물방울 모양은 약 9입니다.</span>
-        </div>
-        <div class="cmp">
-          <div class="with"><b>방정식이 있으면</b><p>컴퓨터 속에서 수천 가지 모양에 바람을 불어 보고 가장 좋은 모양을 고릅니다.</p></div>
-          <div class="without"><b>방정식이 없으면</b><p>모양마다 실물을 만들어 진짜 풍동에 넣어 봐야 합니다. 시간과 돈이 많이 듭니다.</p></div>
-        </div>
-        <p class="real"><b>자연에서 빌린 모양.</b> KTX-산천의 앞모습은 고등어 머리를, 일본 고속열차 신칸센은 물총새 부리를 본떠 공기 저항과 소음을 줄였습니다.</p>
-      </div>
-      <div>
-        <div class="stage" id="tunnel">
-          <canvas style="height: clamp(320px, 50vh, 520px); touch-action: pan-y; cursor: grab" aria-label="3차원 가상 풍동. 물체 주위를 흐르는 공기"></canvas>
-          <span class="hint">가상 풍동 · 끌어서 돌리기</span>
-          <span class="stage-note">방정식 꺼짐 · 공기가 어떻게 흐르는지 볼 수 없습니다</span>
-          <p class="no3d-msg">3D 장면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</p>
-        </div>
-        <div class="ctl">
-          <div class="seg" role="radiogroup" aria-label="물체 모양" id="shapeSeg">
-            <button type="button" role="radio" aria-checked="true" data-shape="sphere">공 모양</button>
-            <button type="button" role="radio" aria-checked="false" data-shape="tear">물방울 모양</button>
-          </div>
-          <div class="seg eqseg" role="radiogroup" aria-label="방정식"><button type="button" role="radio" aria-checked="true" data-eq="on">방정식 있음</button><button type="button" role="radio" aria-checked="false" data-eq="off">없음</button></div>
-          <label class="slider" for="rg-wind">바람 세기 <input type="range" id="rg-wind" min="40" max="160" value="100"></label>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene-wrap" id="sports">
-    <div class="wrap scene flip">
-      <div class="scene-text">
-        <p class="tag">바람 · 스포츠</p>
-        <h2>프리킥은 왜 휘어질까?</h2>
-        <p>공이 회전하면 한쪽 옆의 공기는 빨라지고 반대쪽은 느려집니다. 공은 공기가 빠른 쪽으로 끌려가며 휘어요. 회전을 조절해서 수비벽을 돌아 골을 넣어 보세요.</p>
-        <div class="cmp">
-          <div class="with"><b>방정식이 있으면</b><p>차기 전에 공이 휘어 갈 길이 보입니다(파란 점선).</p></div>
-          <div class="without"><b>방정식이 없으면</b><p>차 보고, 빗나가면 다시 찹니다. 감으로 익힐 수밖에 없습니다.</p></div>
-        </div>
-        <p class="real"><b>실제로는</b> 축구공과 골프공 표면 설계, 수영복 옷감, 사이클 헬멧, 1997년 호베르투 카를루스의 ‘바나나킥’ 분석에 씁니다.</p>
-      </div>
-      <div>
-        <figure class="stage" style="max-width: 460px; margin-inline: auto">
-          <canvas id="kickCanvas" style="aspect-ratio: 22 / 27" aria-label="위에서 내려다본 프리킥 장면"></canvas>
-          <span class="stage-note">방정식 꺼짐 · 공이 어디로 휠지 모릅니다</span>
-        </figure>
-        <div class="ctl" style="max-width: 460px; margin-inline: auto">
-          <label class="slider" for="rg-spin">공의 회전 <input type="range" id="rg-spin" min="0" max="100" value="20"></label>
-          <button type="button" class="btn" id="kickBtn">차기</button>
-          <div class="seg eqseg" role="radiogroup" aria-label="방정식"><button type="button" role="radio" aria-checked="true" data-eq="on">방정식 있음</button><button type="button" role="radio" aria-checked="false" data-eq="off">없음</button></div>
-          <span class="chip warn" id="kickResult" hidden></span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="recap-sec" id="recap">
+  <section class="scene" id="storm">
     <div class="wrap">
-      <p class="tag">정리</p>
-      <h2>물과 바람의 방정식이 있을 때와 없을 때</h2>
-      <div class="recap-wrap">
-        <table class="recap">
-          <thead><tr><th scope="col"></th><th scope="col" class="w">방정식이 있으면</th><th scope="col" class="wo">없으면</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">바다</th><td>기름이 닿을 해안을 미리 알고 막는다</td><td class="wo">해안이 까맣게 된 뒤에야 안다</td></tr>
-            <tr><th scope="row">병원</th><td>CT 사진만으로 혈관의 위험을 계산한다</td><td class="wo">관을 혈관에 넣어 직접 잰다</td></tr>
-            <tr><th scope="row">교실</th><td>어느 창문을 열지 계산으로 안다</td><td class="wo">감으로 창문을 연다</td></tr>
-            <tr><th scope="row">태풍</th><td>며칠 전에 길을 알고 대비한다</td><td class="wo">코앞에 와서야 안다</td></tr>
-            <tr><th scope="row">자동차 · 기차</th><td>컴퓨터로 수천 가지 모양을 시험한다</td><td class="wo">하나하나 만들어 바람을 쏜다</td></tr>
-            <tr><th scope="row">축구</th><td>공이 휘는 길을 미리 계산한다</td><td class="wo">차 보고 감으로 익힌다</td></tr>
-            <tr><th scope="row">영화 · 게임</th><td>진짜 같은 물과 연기를 만든다</td><td class="wo">움직이지 않는 그림이 된다</td></tr>
-          </tbody>
-        </table>
+      <div class="scene-head">
+        <div><p class="big">바람</p><h2>태풍은 어디로 올까?</h2></div>
+        <p class="scene-lede">남쪽 바다에서 태풍이 올라옵니다. 구름은 위성 사진으로 볼 수 있지만, 태풍이 앞으로 어디로 갈지는 보이지 않습니다. 같은 태풍을 두 세상에서 나란히 보세요.</p>
       </div>
-      <p class="closing-big">물과 바람의 방정식은 보이지 않는 흐름을 보여 주고, 아직 오지 않은 내일을 미리 보여 주는 식입니다.</p>
-      <p class="closing-sub">그만큼 중요한 식이라, 이 식이 언제나 제대로 작동하는지는 수학자들이 오래 풀지 못한 질문이었습니다. 최근 AI가 이 질문에 도전했다는 소식이 큰 뉴스가 된 까닭입니다.</p>
+      <div class="ba h" id="stormStage">
+        <canvas aria-label="태풍 3D 장면. 방정식이 없을 때와 있을 때를 나란히 보여 줍니다"></canvas>
+        <span class="ba-sep" aria-hidden="true"></span>
+        <div class="ba-label off"><b>방정식이 없으면</b><span data-status="off">태풍이 어디로 올지 모릅니다</span></div>
+        <div class="ba-label on"><b>방정식이 있으면</b><span data-status="on">사흘 전부터 진로를 압니다</span></div>
+        <div class="ba-time" data-time>상륙까지 3.0일</div>
+        <p class="no3d-msg">3D 장면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</p>
+      </div>
+      <div class="ba-ctl">
+        <div class="seg" role="radiogroup" aria-label="보기">
+          <button type="button" role="radio" aria-checked="false" data-view="off">없으면만</button>
+          <button type="button" role="radio" aria-checked="true" data-view="both">나란히 비교</button>
+          <button type="button" role="radio" aria-checked="false" data-view="on">있으면만</button>
+        </div>
+        <button type="button" class="btn" data-replay>처음부터 다시</button>
+        <span class="hintline">상륙 사흘 전부터 상륙까지를 30초 남짓으로 보여 줍니다.</span>
+      </div>
+      <div class="diff">
+        <div class="wo">
+          <h3>방정식이 없으면</h3>
+          <ol>
+            <li>하늘과 구름을 보고 짐작할 뿐, 바람의 흐름은 보이지 않습니다.</li>
+            <li>태풍이 어디로 상륙할지 모릅니다.</li>
+            <li>고기잡이배가 바다에 남아 있다가 태풍을 만납니다.</li>
+          </ol>
+        </div>
+        <div class="w">
+          <h3>방정식이 있으면</h3>
+          <ol>
+            <li>구름 속 바람의 세기와 방향까지 계산해 보여 줍니다.</li>
+            <li>사흘 전부터 태풍이 지나갈 길(파란 점)과 상륙할 곳을 압니다.</li>
+            <li>배는 항구로 돌아오고, 주민은 미리 대피합니다.</li>
+          </ol>
+        </div>
+      </div>
+      <p class="real"><b>실제로는</b> 기상청이 지구 대기를 수많은 작은 상자로 나누고, 이 방정식을 날씨에 맞게 고친 식을 슈퍼컴퓨터로 매일 풀어 태풍 진로와 일기예보를 냅니다.</p>
+    </div>
+  </section>
+
+  <section class="closing" id="closing">
+    <div class="wrap">
+      <p class="tag">한 줄로 정리하면</p>
+      <p class="closing-big">물과 바람의 방정식은 눈에 보이지 않는 흐름을 보여 주고, 아직 오지 않은 내일을 미리 보여 줍니다. 그래서 막을 수 있고, 대비할 수 있습니다.</p>
+      <div class="qa">
+        <h3>그럼 AI가 증명했다는 건 뭔가요?</h3>
+        <p>이 식이 <strong>아주 특별하게 설계한 조건</strong>에서 속도가 무한대로 치솟으며 “깨질” 수 있다는 수학적 주장입니다. 아직 검증 중이고, 물이 스스로 그렇게 깨질 수 있는지는 여전히 모릅니다.</p>
+        <p>속도가 무한대가 되려면 소용돌이가 물 분자보다도 작아져야 합니다. 그 크기에서는 물이 분자 알갱이의 모임이라 원래 이 식이 다루는 세계가 아닙니다. 그래서 기름 유출이나 태풍을 계산하는 데는 아무 문제가 없습니다.</p>
+        <p>세계 지도가 북극에서는 크기가 끝없이 늘어나며 깨져도, 서울에서 부산 가는 길을 찾는 데는 문제가 없는 것과 같습니다. AI가 도전한 것은 <strong>이 식이 수학적으로 완벽한가</strong>라는, 수학자들의 100년 가까운 질문입니다.</p>
+      </div>
     </div>
   </section>
 
   <footer>
     <div class="wrap">
-      <p class="fineprint">이 페이지의 장면들은 이해를 돕기 위해 단순화한 계산과 그림입니다. 물감 수조와 교실은 실제 방정식을 거친 격자에서 근사적으로 풀고, 바다·혈관·태풍·풍동의 소용돌이 꼬리·프리킥은 원리를 보여 주는 모형입니다. ‘방정식이 없으면’ 화면은 흐름을 계산하지 못할 때를 과장해서 보여 줍니다. 공기 저항 비교는 교과서 대표값(공 0.47, 유선형 0.04)을 썼습니다.</p>
+      <p class="fineprint">두 장면은 이해를 돕기 위한 모형입니다. 해류와 태풍의 바람은 단순화한 흐름으로 계산했고, 실제 예보는 이 방정식을 바탕으로 한 슈퍼컴퓨터 모델로 합니다. ‘방정식이 없으면’ 쪽은 흐름을 계산하지 못할 때를 과장해서 보여 줍니다.</p>
     </div>
   </footer>
 </main>
@@ -508,1013 +288,627 @@ footer { padding-block: 28px 96px; border-top: 1px solid var(--line); }
 <script>
 (() => {
   'use strict';
-  const root = document.documentElement;
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-  const $ = s => document.querySelector(s);
+  const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  const lerp = (a, b, t) => a + (b - a) * t;
 
-  /* ---------- 테마 ---------- */
-  const token = name => getComputedStyle(root).getPropertyValue(name).trim();
-  function hexToRgb(hex) {
-    let h = (hex || '#000000').replace('#', '');
-    if (h.length === 3) h = h.split('').map(c => c + c).join('');
-    const n = parseInt(h, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  }
-  const rgbTok = name => hexToRgb(token(name));
-  const rgba = (name, a) => { const c = rgbTok(name); return `rgba(${c[0]},${c[1]},${c[2]},${a})`; };
-  const themeFns = [];
-  const onTheme = fn => themeFns.push(fn);
-  const fireTheme = () => themeFns.forEach(fn => fn());
-  const mq = matchMedia('(prefers-color-scheme: dark)');
-  if (mq.addEventListener) mq.addEventListener('change', fireTheme); else if (mq.addListener) mq.addListener(fireTheme);
-  new MutationObserver(fireTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
-
-  /* ---------- 방정식 스위치 (페이지 전체) ---------- */
-  const EQ = { on: true, fns: [] };
-  const onEq = fn => EQ.fns.push(fn);
-  const eqSwitch = $('#eqSwitch');
-  function setEq(on) {
-    EQ.on = on;
-    document.body.classList.toggle('eq-off', !on);
-    eqSwitch.setAttribute('aria-checked', String(on));
-    eqSwitch.querySelector('.sw-label').textContent = on ? '방정식 켜짐' : '방정식 꺼짐';
-    document.querySelectorAll('.eqseg button').forEach(b => b.setAttribute('aria-checked', String((b.dataset.eq === 'on') === on)));
-    EQ.fns.forEach(fn => fn(on));
-  }
-  eqSwitch.addEventListener('click', () => setEq(!EQ.on));
-  document.querySelectorAll('.eqseg button').forEach(b => b.addEventListener('click', () => setEq(b.dataset.eq === 'on')));
-
-  /* ---------- 공통 도우미 ---------- */
   function watchVisible(el, cb) {
     if (!('IntersectionObserver' in window)) { cb(true); return; }
     new IntersectionObserver(es => es.forEach(e => cb(e.isIntersecting)), { threshold: 0.02 }).observe(el);
   }
-  function animate(el, frame) {
+
+  /* ---------- 보기 방식: 나란히 / 없으면만 / 있으면만 ---------- */
+  class View {
+    constructor(stage, onChange) {
+      this.stage = stage; this.mode = 'both'; this.onChange = onChange;
+      this.btns = stage.closest('section').querySelectorAll('.seg button');
+      this.btns.forEach(b => b.addEventListener('click', () => {
+        this.mode = b.dataset.view; this.btns.forEach(x => x.setAttribute('aria-checked', String(x === b)));
+        this.layout(); this.onChange();
+      }));
+      if ('ResizeObserver' in window) new ResizeObserver(() => this.layout()).observe(stage);
+      this.layout();
+    }
+    get vertical() { const r = this.stage.getBoundingClientRect(); return r.width / Math.max(r.height, 1) < 1.1; }
+    layout() {
+      const c = this.stage.classList;
+      c.toggle('only-on', this.mode === 'on'); c.toggle('only-off', this.mode === 'off');
+      const v = this.vertical; c.toggle('v', v); c.toggle('h', !v);
+    }
+  }
+
+  /* ---------- 3D 공통 ---------- */
+  const has3D = !!window.THREE;
+  const labels = [];
+  function makeLabel(text, o = {}) {
+    const opt = Object.assign({ color: '#0E1C2A', bg: 'rgba(255,255,255,0.92)', border: null, size: 0.42 }, o);
+    const c = document.createElement('canvas'), g = c.getContext('2d');
+    const tex = new THREE.CanvasTexture(c); tex.minFilter = THREE.LinearFilter;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, depthWrite: false, transparent: true }));
+    sp.renderOrder = 20;
+    const draw = () => {
+      const fs = 46, pad = 16, font = `600 ${fs}px "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif`;
+      g.font = font;
+      const w = Math.ceil(g.measureText(sp.userData.text).width) + pad * 2, h = Math.round(fs + pad * 1.5);
+      c.width = w; c.height = h;
+      g.font = font; g.clearRect(0, 0, w, h);
+      const r = h / 2.6;
+      g.beginPath(); g.moveTo(r, 0); g.lineTo(w - r, 0); g.quadraticCurveTo(w, 0, w, r); g.lineTo(w, h - r); g.quadraticCurveTo(w, h, w - r, h); g.lineTo(r, h); g.quadraticCurveTo(0, h, 0, h - r); g.lineTo(0, r); g.quadraticCurveTo(0, 0, r, 0); g.closePath();
+      g.fillStyle = opt.bg; g.fill();
+      if (opt.border) { g.lineWidth = 5; g.strokeStyle = opt.border; g.stroke(); }
+      g.fillStyle = opt.color; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(sp.userData.text, w / 2, h / 2 + 2);
+      tex.needsUpdate = true;
+      const k = opt.size * 1.4; sp.scale.set(k * w / h, k, 1);
+    };
+    sp.userData.text = text; sp.userData.draw = draw;
+    sp.userData.setText = t => { if (t !== sp.userData.text) { sp.userData.text = t; draw(); } };
+    draw(); labels.push(sp);
+    return sp;
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => labels.forEach(l => l.userData.draw()));
+
+  function pointsMaterial() {
+    return new THREE.ShaderMaterial({
+      uniforms: { uPx: { value: 400 }, uFade: { value: 1 } },
+      vertexShader: 'attribute vec3 aColor; attribute float aAlpha; attribute float aSize; uniform float uPx; uniform float uFade; varying vec3 vC; varying float vA;' +
+        'void main(){ vC = aColor; vA = aAlpha * uFade; vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = aSize * uPx / -mv.z; }',
+      fragmentShader: 'varying vec3 vC; varying float vA;' +
+        'void main(){ vec2 d = gl_PointCoord - 0.5; float r = dot(d, d) * 4.0; if (r > 1.0) discard; gl_FragColor = vec4(vC, vA * pow(1.0 - r, 1.5)); }',
+      transparent: true, depthWrite: false
+    });
+  }
+  function hash(x, z) { const s = Math.sin(x * 127.1 + z * 311.7) * 43758.5453; return s - Math.floor(s); }
+  function noise(x, z) {
+    const xi = Math.floor(x), zi = Math.floor(z), xf = x - xi, zf = z - zi;
+    const u = xf * xf * (3 - 2 * xf), v = zf * zf * (3 - 2 * zf);
+    return lerp(lerp(hash(xi, zi), hash(xi + 1, zi), u), lerp(hash(xi, zi + 1), hash(xi + 1, zi + 1), u), v);
+  }
+  const C = {
+    sky: 0xD8E4EC, sea: 0x3E7EA6, sand: [0.89, 0.83, 0.65], grass: [0.52, 0.68, 0.40], hill: [0.40, 0.54, 0.32], rock: [0.55, 0.54, 0.48], shelf: [0.62, 0.7, 0.66]
+  };
+  function buildTerrain(heightFn, distFn) {
+    const geo = new THREE.PlaneGeometry(26, 18, 150, 104); geo.rotateX(-Math.PI / 2);
+    const pos = geo.attributes.position, n = pos.count, col = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      const x = pos.getX(i), z = pos.getZ(i), h = heightFn(x, z), d = distFn(x, z);
+      pos.setY(i, h);
+      let c;
+      if (d < 0) c = C.shelf;
+      else if (d < 0.45) c = C.sand;
+      else { const t = clamp((h - 0.3) / 1.4, 0, 1), m = t < 0.6 ? [lerp(C.grass[0], C.hill[0], t / 0.6), lerp(C.grass[1], C.hill[1], t / 0.6), lerp(C.grass[2], C.hill[2], t / 0.6)] : [lerp(C.hill[0], C.rock[0], (t - 0.6) / 0.4), lerp(C.hill[1], C.rock[1], (t - 0.6) / 0.4), lerp(C.hill[2], C.rock[2], (t - 0.6) / 0.4)]; c = m; }
+      const k = 0.94 + 0.12 * hash(x * 3.1, z * 2.7);
+      col[i * 3] = c[0] * k; col[i * 3 + 1] = c[1] * k; col[i * 3 + 2] = c[2] * k;
+    }
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    geo.computeVertexNormals();
+    return new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true }));
+  }
+  function buildSea() {
+    const geo = new THREE.PlaneGeometry(26, 18, 78, 54); geo.rotateX(-Math.PI / 2);
+    const base = Float32Array.from(geo.attributes.position.array);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: C.sea, shininess: 60, specular: 0x557788, transparent: true, opacity: 0.93 }));
+    mesh.userData.update = (fn) => {
+      const a = geo.attributes.position.array;
+      for (let i = 0; i < a.length; i += 3) a[i + 1] = fn(base[i], base[i + 2]);
+      geo.attributes.position.needsUpdate = true; geo.computeVertexNormals();
+    };
+    return mesh;
+  }
+  function house(x, y, z, roofColor, rot) {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.22, 0.26), new THREE.MeshLambertMaterial({ color: 0xF1EEE6 }));
+    body.position.y = 0.11; g.add(body);
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(0.27, 0.17, 4), new THREE.MeshLambertMaterial({ color: roofColor }));
+    roof.position.y = 0.3; roof.rotation.y = Math.PI / 4; roof.scale.set(1.15, 1, 0.9); g.add(roof);
+    g.position.set(x, y, z); g.rotation.y = rot; return g;
+  }
+  function boat(hullColor, cabinColor, scale = 1) {
+    const g = new THREE.Group();
+    const hull = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.1, 0.18), new THREE.MeshLambertMaterial({ color: hullColor }));
+    hull.position.y = 0.05; g.add(hull);
+    const bow = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.16, 4), new THREE.MeshLambertMaterial({ color: hullColor }));
+    bow.rotation.z = -Math.PI / 2; bow.rotation.x = Math.PI / 4; bow.position.set(0.32, 0.05, 0); bow.scale.set(1, 1, 0.9); g.add(bow);
+    const cab = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.12, 0.13), new THREE.MeshLambertMaterial({ color: cabinColor }));
+    cab.position.set(-0.08, 0.16, 0); g.add(cab);
+    g.scale.setScalar(scale); return g;
+  }
+
+  /* 장면 틀: 렌더러, 카메라, 끌어서 돌리기, 좌우 분할 렌더 */
+  function makeStage(stage, opts) {
+    const canvas = stage.querySelector('canvas');
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); } catch (e) { stage.classList.add('no3d'); return null; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(C.sky);
+    scene.fog = new THREE.Fog(C.sky, 24, 44);
+    scene.add(new THREE.HemisphereLight(0xFFFFFF, 0x6A7F74, 0.85));
+    const sun = new THREE.DirectionalLight(0xFFF4E0, 0.75); sun.position.set(-6, 12, 8); scene.add(sun);
+    const camera = new THREE.PerspectiveCamera(38, 1.6, 0.1, 100);
+    const orbit = Object.assign({ theta: -0.3, phi: 0.9, r: 15, target: new THREE.Vector3() }, opts.orbit);
+    const pts = [];
+    function place(aspect) {
+      const boost = aspect < 0.8 ? 1.75 : aspect < 1.1 ? 1.45 : aspect < 1.4 ? 1.18 : 1;
+      const r = orbit.r * boost;
+      camera.aspect = aspect; camera.updateProjectionMatrix();
+      camera.position.set(orbit.target.x + r * Math.sin(orbit.phi) * Math.sin(orbit.theta), orbit.target.y + r * Math.cos(orbit.phi), orbit.target.z + r * Math.sin(orbit.phi) * Math.cos(orbit.theta));
+      camera.lookAt(orbit.target);
+    }
+    function fit() {
+      const r = canvas.getBoundingClientRect(); if (r.width < 10 || r.height < 10) return;
+      renderer.setSize(r.width, r.height, false);
+    }
+    let drag = null;
+    canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, id: e.pointerId, type: e.pointerType }; try { canvas.setPointerCapture(e.pointerId); } catch (_) {} canvas.classList.add('grabbing'); });
+    canvas.addEventListener('pointermove', e => {
+      if (!drag || drag.id !== e.pointerId) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
+      orbit.theta -= dx * 0.006;
+      if (drag.type === 'mouse') orbit.phi = clamp(orbit.phi - dy * 0.005, 0.35, 1.25);
+      if (api.idle) api.idle();
+    });
+    const end = e => { if (drag && drag.id === e.pointerId) { drag = null; canvas.classList.remove('grabbing'); } };
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(n => canvas.addEventListener(n, end));
+
+    const api = {
+      renderer, scene, camera, canvas,
+      onGroup: new THREE.Group(), offGroup: new THREE.Group(),
+      swaps: [],
+      registerPoints(m) { pts.push(m); },
+      render(view) {
+        const r = canvas.getBoundingClientRect(), W = r.width, H = r.height;
+        if (W < 10 || H < 10) return;
+        const mode = view.mode, vertical = view.vertical;
+        const views = mode !== 'both' ? [[mode === 'on', 0, 0, W, H]]
+          : vertical ? [[false, 0, Math.round(H / 2), W, H - Math.round(H / 2)], [true, 0, 0, W, Math.round(H / 2)]]
+          : [[false, 0, 0, Math.round(W / 2), H], [true, Math.round(W / 2), 0, W - Math.round(W / 2), H]];
+        const pr = renderer.getPixelRatio();
+        renderer.setScissorTest(true);
+        for (const [on, x, y, w, h] of views) {
+          api.onGroup.visible = on; api.offGroup.visible = !on; api.swaps.forEach(f => f(on));
+          place(w / h);
+          const px = h * pr / (2 * Math.tan(camera.fov * Math.PI / 360));
+          pts.forEach(m => { m.uniforms.uPx.value = px; });
+          renderer.setViewport(x, y, w, h); renderer.setScissor(x, y, w, h);
+          renderer.render(scene, camera);
+        }
+        renderer.setScissorTest(false);
+      }
+    };
+    scene.add(api.onGroup, api.offGroup);
+    fit();
+    if ('ResizeObserver' in window) new ResizeObserver(() => { fit(); if (api.idle) api.idle(); }).observe(canvas);
+    return api;
+  }
+
+  function runLoop(stage, S, view, step) {
     let visible = false, running = false, last = 0;
     const loop = now => {
       if (!visible || document.hidden) { running = false; return; }
-      const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 60;
-      last = now; frame(dt, now);
+      const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 60; last = now;
+      step(reduceMotion ? dt * 0.6 : dt);
+      S.render(view);
       requestAnimationFrame(loop);
     };
     const start = () => { if (!running && visible && !document.hidden) { running = true; last = 0; requestAnimationFrame(loop); } };
-    watchVisible(el, v => { visible = v; start(); });
+    watchVisible(stage, v => { visible = v; start(); });
     document.addEventListener('visibilitychange', start);
-    return { start, get visible() { return visible; } };
-  }
-  function fit(canvas) {
-    const r = canvas.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
-    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-    return { w: Math.max(r.width, 1), h: Math.max(r.height, 1), dpr };
-  }
-  function bindSeg(id, attr, cb) {
-    const btns = document.querySelectorAll(`#${id} button`);
-    btns.forEach(b => b.addEventListener('click', () => {
-      btns.forEach(x => x.setAttribute('aria-checked', String(x === b)));
-      cb(b.dataset[attr]);
-    }));
-  }
-  const mix3 = (out, a, b, t) => { out[0] = a[0] + (b[0] - a[0]) * t; out[1] = a[1] + (b[1] - a[1]) * t; out[2] = a[2] + (b[2] - a[2]) * t; return out; };
-  function speedRGB(out, s, slow, mid, fast, hot) {
-    if (s < 1) return mix3(out, slow, mid, clamp(s, 0, 1));
-    if (s < 2 || !hot) return mix3(out, mid, fast, clamp(s - 1, 0, 1));
-    return mix3(out, fast, hot, clamp((s - 2) / 1.5, 0, 1));
-  }
-  function question(ctx, x, y, size, color) {
-    ctx.fillStyle = color; ctx.font = `700 ${size}px "Hahmlet", serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('?', x, y); ctx.textBaseline = 'alphabetic';
-  }
-  function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h); ctx.lineTo(x, y + h); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+    return start;
   }
 
-  /* ---------- 2D 유체 계산 (Stam의 안정 유체 방법) ---------- */
-  class FluidSim {
-    constructor(nx, ny) {
-      this.nx = nx; this.ny = ny; this.W = nx + 2; this.h = 1 / ny;
-      const n = (nx + 2) * (ny + 2), F = () => new Float32Array(n);
-      this.u = F(); this.v = F(); this.u0 = F(); this.v0 = F();
-      this.p = F(); this.div = F(); this.curl = F(); this.tmp = F();
-      this.dye = [F(), F(), F()];
-    }
-    bnd(b, x) {
-      const { nx, ny, W } = this, top = W * (ny + 1);
-      for (let i = 1; i <= nx; i++) {
-        x[i] = b === 2 ? -x[i + W] : x[i + W];
-        x[i + top] = b === 2 ? -x[i + top - W] : x[i + top - W];
-      }
-      for (let j = 1; j <= ny; j++) {
-        const r = W * j;
-        x[r] = b === 1 ? -x[r + 1] : x[r + 1];
-        x[r + nx + 1] = b === 1 ? -x[r + nx] : x[r + nx];
-      }
-      x[0] = 0.5 * (x[1] + x[W]);
-      x[nx + 1] = 0.5 * (x[nx] + x[nx + 1 + W]);
-      x[top] = 0.5 * (x[top + 1] + x[top - W]);
-      x[top + nx + 1] = 0.5 * (x[top + nx] + x[top - W + nx + 1]);
-    }
-    lin(b, x, x0, a, c, iters) {
-      const { nx, ny, W } = this, ic = 1 / c;
-      for (let k = 0; k < iters; k++) {
-        for (let j = 1; j <= ny; j++) {
-          let id = 1 + j * W;
-          for (let i = 1; i <= nx; i++, id++) x[id] = (x0[id] + a * (x[id - 1] + x[id + 1] + x[id - W] + x[id + W])) * ic;
-        }
-        this.bnd(b, x);
-      }
-    }
-    advect(b, d, d0, u, v, dt) {
-      const { nx, ny, W } = this, dt0 = dt / this.h;
-      for (let j = 1; j <= ny; j++) {
-        let id = 1 + j * W;
-        for (let i = 1; i <= nx; i++, id++) {
-          let x = i - dt0 * u[id], y = j - dt0 * v[id];
-          if (x < 0.5) x = 0.5; else if (x > nx + 0.5) x = nx + 0.5;
-          if (y < 0.5) y = 0.5; else if (y > ny + 0.5) y = ny + 0.5;
-          const i0 = x | 0, j0 = y | 0, s1 = x - i0, s0 = 1 - s1, t1 = y - j0, t0 = 1 - t1, a = i0 + j0 * W;
-          d[id] = s0 * (t0 * d0[a] + t1 * d0[a + W]) + s1 * (t0 * d0[a + 1] + t1 * d0[a + 1 + W]);
-        }
-      }
-      this.bnd(b, d);
-    }
-    project(iters) {
-      const { nx, ny, W, h, u, v, p, div } = this;
-      for (let j = 1; j <= ny; j++) {
-        let id = 1 + j * W;
-        for (let i = 1; i <= nx; i++, id++) div[id] = -0.5 * h * (u[id + 1] - u[id - 1] + v[id + W] - v[id - W]);
-      }
-      this.bnd(0, div); this.bnd(0, p);
-      this.lin(0, p, div, 1, 4, iters);
-      const k = 0.5 / h;
-      for (let j = 1; j <= ny; j++) {
-        let id = 1 + j * W;
-        for (let i = 1; i <= nx; i++, id++) { u[id] -= k * (p[id + 1] - p[id - 1]); v[id] -= k * (p[id + W] - p[id - W]); }
-      }
-      this.bnd(1, u); this.bnd(2, v);
-    }
-    confine(eps, dt) {
-      const { nx, ny, W, h, u, v, curl } = this, k = 0.5 / h;
-      for (let j = 1; j <= ny; j++) {
-        let id = 1 + j * W;
-        for (let i = 1; i <= nx; i++, id++) curl[id] = k * ((v[id + 1] - v[id - 1]) - (u[id + W] - u[id - W]));
-      }
-      const s = dt * eps * h;
-      for (let j = 2; j < ny; j++) {
-        let id = 2 + j * W;
-        for (let i = 2; i < nx; i++, id++) {
-          const gx = Math.abs(curl[id + 1]) - Math.abs(curl[id - 1]);
-          const gy = Math.abs(curl[id + W]) - Math.abs(curl[id - W]);
-          const len = Math.sqrt(gx * gx + gy * gy) + 1e-6, w = curl[id];
-          u[id] += s * (gy / len) * w; v[id] -= s * (gx / len) * w;
-        }
-      }
-    }
-    splat(gx, gy, fx, fy, rad, ci, amt) {
-      const { nx, ny, W, u, v } = this, d = this.dye[ci];
-      const r = Math.ceil(rad * 2.4), inv = 1 / (rad * rad);
-      const i0 = Math.max(1, Math.floor(gx - r)), i1 = Math.min(nx, Math.ceil(gx + r));
-      const j0 = Math.max(1, Math.floor(gy - r)), j1 = Math.min(ny, Math.ceil(gy + r));
-      for (let j = j0; j <= j1; j++) {
-        for (let i = i0; i <= i1; i++) {
-          const dx = i - gx, dy = j - gy, g = Math.exp(-(dx * dx + dy * dy) * inv);
-          if (g < 0.01) continue;
-          const id = i + j * W;
-          u[id] += fx * g; v[id] += fy * g;
-          if (amt) d[id] = Math.min(d[id] + amt * g, 5);
-        }
-      }
-    }
-    step(dt, P) {
-      const { u, v } = this;
-      if (P.off) {
-        u.fill(0); v.fill(0);
-        for (const d of this.dye) for (let k = 0; k < d.length; k++) d[k] *= 0.9993;
-        return;
-      }
-      if (P.vort > 0) this.confine(P.vort, dt);
-      this.u0.set(u); this.v0.set(v);
-      this.advect(1, u, this.u0, this.u0, this.v0, dt);
-      this.advect(2, v, this.v0, this.u0, this.v0, dt);
-      this.project(20);
-      for (let k = 0; k < u.length; k++) {
-        let a = u[k] * 0.999, b = v[k] * 0.999;
-        const s2 = a * a + b * b;
-        if (s2 > 4) { const f = 2 / Math.sqrt(s2); a *= f; b *= f; }
-        u[k] = a; v[k] = b;
-      }
-      for (let c = 0; c < 3; c++) {
-        const d = this.dye[c], keep = P.decay[c];
-        this.tmp.set(d);
-        this.advect(0, d, this.tmp, u, v, dt);
-        for (let k = 0; k < d.length; k++) d[k] *= keep;
-      }
-    }
-  }
+  /* =========================================================
+     물: 기름 유출
+     ========================================================= */
+  (function oilScene() {
+    const stage = document.getElementById('oilStage');
+    if (!has3D) { stage.classList.add('no3d'); return; }
+    const S = makeStage(stage, { orbit: { theta: -0.12, phi: 0.86, r: 15.5, target: new THREE.Vector3(-0.5, 0, 0.2) } });
+    if (!S) return;
+    const { scene } = S;
+    const statusOff = stage.querySelector('[data-status="off"]'), statusOn = stage.querySelector('[data-status="on"]'), timeEl = stage.querySelector('[data-time]');
 
-  /* ---------- 유체 화면 ---------- */
-  class Tank {
-    constructor(canvas, o) {
-      this.canvas = canvas; this.ctx = canvas.getContext('2d');
-      this.o = Object.assign({ ny: [84, 108], prewarm: 0, pigments: ['--blue', '--teal', '--orange'], stir: true, alphaK: 1.75 }, o);
-      this.params = Object.assign({ vort: 7, off: false, decay: [0.9968, 0.9968, 0.9968] }, this.o.params || {});
-      this.off = document.createElement('canvas'); this.offCtx = this.off.getContext('2d');
-      this.pointer = null; this.lastUser = -1e9; this.t = 0; this.steps = 0; this.colorIdx = 2; this.colorClock = 0; this.acc = 0;
-      this.readColors();
-      onTheme(() => { this.readColors(); this.draw(); });
-      this.resize();
-      if ('ResizeObserver' in window) new ResizeObserver(() => this.resize()).observe(canvas);
-      if (this.o.stir) this.bindPointer();
-      for (let k = 0; k < this.o.prewarm; k++) this.tick(1 / 60, true);
-      this.draw();
-      this.anim = animate(canvas, dt => {
-        this.acc += dt;
-        if (this.acc < 1 / 62) return;
-        this.acc = Math.min(this.acc - 1 / 60, 1 / 60);
-        this.tick(1 / 60); this.draw();
-        if (this.o.onFrame) this.o.onFrame(this);
-      });
-    }
-    readColors() { this.bg = rgbTok('--tank'); this.pig = this.o.pigments.map(rgbTok); }
-    resize() {
-      let r = this.canvas.getBoundingClientRect();
-      if (r.width < 20 || r.height < 20) { if (this.sim) return; r = { width: 640, height: 400 }; }
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      this.canvas.width = Math.round(r.width * dpr); this.canvas.height = Math.round(r.height * dpr);
-      this.cssW = r.width; this.cssH = r.height; this.dpr = dpr;
-      const ny = this.o.ny[r.width < 620 ? 0 : 1];
-      const nx = clamp(Math.round(ny * r.width / r.height), 30, 230);
-      if (!this.sim || this.sim.ny !== ny || Math.abs(this.sim.nx - nx) > nx * 0.12) {
-        this.sim = new FluidSim(nx, ny);
-        this.off.width = nx; this.off.height = ny;
-        this.img = this.offCtx.createImageData(nx, ny);
-        if (this.o.init) this.o.init(this.sim, this);
-      }
-      this.draw();
-    }
-    bindPointer() {
-      const c = this.canvas;
-      const pos = e => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-      c.addEventListener('pointerdown', e => {
-        const [x, y] = pos(e);
-        try { c.setPointerCapture(e.pointerId); } catch (_) {}
-        this.pointer = { x, y, px: x, py: y, id: e.pointerId, type: e.pointerType, seen: performance.now() };
-        this.colorIdx = (this.colorIdx + 1) % 3; this.lastUser = performance.now();
-        this.anim.start();
-      });
-      c.addEventListener('pointermove', e => {
-        const [x, y] = pos(e);
-        if (!this.pointer || this.pointer.id !== e.pointerId) {
-          if (e.pointerType !== 'mouse') return;
-          this.pointer = { x, y, px: x, py: y, id: e.pointerId, type: 'mouse', seen: performance.now() };
-        }
-        this.pointer.x = x; this.pointer.y = y; this.pointer.seen = performance.now(); this.lastUser = performance.now();
-      });
-      const end = e => {
-        if (!this.pointer || this.pointer.id !== e.pointerId) return;
-        if (e.type === 'pointerleave' || e.pointerType !== 'mouse') this.pointer = null;
-      };
-      ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => c.addEventListener(n, end));
-    }
-    tick(dt, silent) {
-      const s = this.sim; this.t += dt;
-      const p = this.pointer;
-      if (p) {
-        const dx = p.x - p.px, dy = p.y - p.py;
-        p.px = p.x; p.py = p.y;
-        if (dx || dy) {
-          let fx = dx / this.cssH * 32, fy = dy / this.cssH * 32;
-          const m = Math.hypot(fx, fy);
-          if (m > 1.6) { fx *= 1.6 / m; fy *= 1.6 / m; }
-          this.colorClock += dt;
-          if (p.type === 'mouse' && this.colorClock > 2.2) { this.colorClock = 0; this.colorIdx = (this.colorIdx + 1) % 3; }
-          s.splat(p.x / this.cssW * s.nx + 0.5, p.y / this.cssH * s.ny + 0.5, fx, fy, s.ny * 0.042, this.colorIdx, 0.38);
-        }
-      }
-      if (this.o.force) this.o.force(s, dt, this, silent);
-      s.step(dt, this.params);
-      if (!this.params.off) this.steps++;
-    }
-    draw() {
-      const s = this.sim; if (!s) return;
-      const { nx, ny, W } = s, data = this.img.data, bg = this.bg, K = this.o.alphaK;
-      const [A, B, C] = this.pig, d0 = s.dye[0], d1 = s.dye[1], d2 = s.dye[2];
-      let o = 0;
-      for (let j = 1; j <= ny; j++) {
-        let id = 1 + j * W;
-        for (let i = 1; i <= nx; i++, id++, o += 4) {
-          const a = d0[id], b = d1[id], c = d2[id], tot = a + b + c;
-          let r = bg[0], g = bg[1], bl = bg[2];
-          if (tot > 0.003) {
-            const inv = 1 / tot, al = 1 - Math.exp(-tot * K);
-            r += ((a * A[0] + b * B[0] + c * C[0]) * inv - r) * al;
-            g += ((a * A[1] + b * B[1] + c * C[1]) * inv - g) * al;
-            bl += ((a * A[2] + b * B[2] + c * C[2]) * inv - bl) * al;
-          }
-          data[o] = r; data[o + 1] = g; data[o + 2] = bl; data[o + 3] = 255;
-        }
-      }
-      this.offCtx.putImageData(this.img, 0, 0);
-      const ctx = this.ctx;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(this.off, 0, 0, this.canvas.width, this.canvas.height);
-      ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-      if (this.o.overlay) this.o.overlay(ctx, this.cssW, this.cssH, this);
-      if (this.o.stir && this.pointer && performance.now() - this.pointer.seen < 900) ring(ctx, this.pointer.x, this.pointer.y, 13);
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-    }
-  }
-  function ring(ctx, x, y, r) {
-    const c = token('--amber-text');
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.lineWidth = 2; ctx.strokeStyle = c; ctx.stroke();
-  }
-
-  /* ---------- 물감 수조 ---------- */
-  const heroSteps = $('#heroSteps');
-  let heroFrame = 0;
-  const hero = new Tank($('#heroCanvas'), {
-    prewarm: 110,
-    force(s, dt, tank, silent) {
-      tank.autoPos = null;
-      if (!silent && (reduceMotion || performance.now() - tank.lastUser < 2600)) return;
-      const w = 0.85, t = tank.t, asp = tank.cssW / tank.cssH;
-      const nx = 0.5 + 0.3 * Math.sin(w * t), ny = 0.5 + 0.24 * Math.sin(2 * w * t + 0.6);
-      const vx = 0.3 * w * Math.cos(w * t) * asp, vy = 0.48 * w * Math.cos(2 * w * t + 0.6);
-      s.splat(nx * s.nx + 0.5, ny * s.ny + 0.5, vx * 0.16, vy * 0.16, s.ny * 0.046, Math.floor(t / 2.8) % 3, 0.13);
-      tank.autoPos = [nx * tank.cssW, ny * tank.cssH];
-    },
-    overlay(ctx, W, H, tank) { if (tank.autoPos) ring(ctx, tank.autoPos[0], tank.autoPos[1], 10); },
-    onFrame(t) { if (++heroFrame % 6 === 0) heroSteps.textContent = t.steps.toLocaleString('ko-KR') + (t.params.off ? '번 · 계산 멈춤' : '번'); }
-  });
-  onEq(on => { hero.params.off = !on; hero.draw(); });
-
-  /* ---------- 바다: 기름 유출 ---------- */
-  (function initSea() {
-    const canvas = $('#seaCanvas'), ctx = canvas.getContext('2d'), chip = $('#seaChip');
-    const N = 720, X = new Float32Array(N), Y = new Float32Array(N), state = new Uint8Array(N);
-    const SHIP = [0.17, 0.3], DUR = 34, RELEASE = 11;
-    let size = fit(canvas), clock = 0, released = 0, forecast = [], hitRange = null, fcClock = 0;
-    const HN = () => size.h / size.w;
-    const coast = y => 0.8 + 0.045 * Math.sin(y * 10 + 0.4) + 0.06 * (y - 0.3);
-    function current(x, y, t, o) {
-      let u = 0.021 + 0.009 * Math.cos((y - 0.3) * 7), v = 0.0065 * Math.sin(x * 9 + 0.35 * t);
-      const ex = x - 0.44, ey = y - 0.43, r = Math.hypot(ex, ey) + 1e-4;
-      const vt = r < 0.09 ? 0.028 * r / 0.09 : 0.028 * Math.pow(0.09 / r, 1.6);
-      u += (ey / r) * vt; v += (-ex / r) * vt;
-      const gap = coast(y) - x;
-      if (gap < 0.07) { const f = clamp(gap / 0.07, 0.15, 1); u *= f; v = v * f + (1 - f) * 0.012; }
-      o[0] = u; o[1] = v;
-    }
-    const cv = [0, 0];
-    function reset() { state.fill(0); released = 0; clock = 0; forecast = []; hitRange = null; }
-    function advance(dt) {
-      clock += dt;
-      if (clock > DUR) reset();
-      const want = Math.min(N, Math.floor(Math.min(clock, RELEASE) / RELEASE * N));
-      while (released < want) {
-        const a = Math.random() * Math.PI * 2, r = 0.012 * Math.sqrt(Math.random());
-        X[released] = SHIP[0] + 0.015 + r * Math.cos(a); Y[released] = SHIP[1] + r * Math.sin(a); state[released] = 1; released++;
-      }
-      const sd = Math.sqrt(2 * 3e-5 * dt);
-      for (let i = 0; i < released; i++) {
-        if (state[i] !== 1) continue;
-        current(X[i], Y[i], clock, cv);
-        X[i] += cv[0] * dt + sd * (Math.random() + Math.random() - 1) * 1.2;
-        Y[i] += cv[1] * dt + sd * (Math.random() + Math.random() - 1) * 1.2;
-        Y[i] = clamp(Y[i], 0.005, HN() - 0.005); X[i] = Math.max(X[i], 0.005);
-        if (X[i] >= coast(Y[i]) - 0.004) { X[i] = coast(Y[i]) - 0.004; state[i] = 2; }
-      }
-      fcClock += dt;
-      if (fcClock > 0.4) { fcClock = 0; makeForecast(); }
-    }
-    function makeForecast() {
-      forecast = []; let lo = 1e9, hi = -1e9;
-      const o = [0, 0];
-      for (let i = 0; i < released; i += 3) {
-        if (state[i] !== 1) continue;
-        let x = X[i], y = Y[i], t = clock, hit = false;
-        for (let k = 0; k < 64; k++) {
-          current(x, y, t, o); x += o[0] * 0.25; y += o[1] * 0.25; t += 0.25;
-          if (x >= coast(y) - 0.004) { x = coast(y) - 0.004; hit = true; break; }
-        }
-        forecast.push(x, y);
-        if (hit) { lo = Math.min(lo, y); hi = Math.max(hi, y); }
-      }
-      hitRange = lo < hi ? [lo, hi] : null;
-    }
-    function draw() {
-      size = fit(canvas);
-      const W = size.w, H = size.h, S = W, on = EQ.on;
-      ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
-      ctx.fillStyle = token('--sea'); ctx.fillRect(0, 0, W, H);
-      if (on) {
-        ctx.strokeStyle = rgba('--flow-slow', 0.35); ctx.lineWidth = 1.2;
-        const o = [0, 0];
-        for (let gx = 0.04; gx < 0.8; gx += 0.055) for (let gy = 0.035; gy < HN(); gy += 0.055) {
-          if (gx > coast(gy) - 0.03) continue;
-          current(gx, gy, clock, o);
-          const L = 0.9 / 0.03 * Math.hypot(o[0], o[1]) * 0.03, a = Math.atan2(o[1], o[0]);
-          const x0 = gx * S, y0 = gy * S, x1 = x0 + Math.cos(a) * L * S, y1 = y0 + Math.sin(a) * L * S;
-          ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
-          ctx.lineTo(x1 - Math.cos(a - 0.5) * 4, y1 - Math.sin(a - 0.5) * 4); ctx.moveTo(x1, y1); ctx.lineTo(x1 - Math.cos(a + 0.5) * 4, y1 - Math.sin(a + 0.5) * 4);
-          ctx.stroke();
-        }
-      }
-      ctx.fillStyle = token('--land'); ctx.beginPath(); ctx.moveTo(W, 0);
-      for (let k = 0; k <= 60; k++) { const y = HN() * k / 60; ctx.lineTo(coast(y) * S, y * S); }
-      ctx.lineTo(W, H); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = token('--muted'); ctx.font = '500 12px "IBM Plex Mono", monospace'; ctx.textAlign = 'right'; ctx.fillText('해안 마을', W - 12, 22);
-      if (on && hitRange) {
-        ctx.strokeStyle = token('--hot'); ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath();
-        for (let k = 0; k <= 20; k++) { const y = hitRange[0] + (hitRange[1] - hitRange[0]) * k / 20; const x = coast(y) * S + 3; k ? ctx.lineTo(x, y * S) : ctx.moveTo(x, y * S); }
-        ctx.stroke();
-        ctx.fillStyle = token('--hot'); ctx.font = '600 12px "IBM Plex Sans KR", sans-serif'; ctx.textAlign = 'right';
-        ctx.fillText('내일 기름이 닿을 해안', coast(hitRange[1]) * S - 8, Math.min(H - 8, hitRange[1] * S + 18));
-      }
-      if (on && forecast.length) {
-        ctx.fillStyle = rgba('--blue', 0.28);
-        for (let k = 0; k < forecast.length; k += 2) { ctx.beginPath(); ctx.arc(forecast[k] * S, forecast[k + 1] * S, 2.4, 0, Math.PI * 2); ctx.fill(); }
-      }
-      ctx.fillStyle = rgba('--oil', 0.3);
-      for (let i = 0; i < released; i++) { ctx.beginPath(); ctx.arc(X[i] * S, Y[i] * S, state[i] === 2 ? 3.2 : 4.6, 0, Math.PI * 2); ctx.fill(); }
-      const sx = SHIP[0] * S, sy = SHIP[1] * S, L = Math.max(22, S * 0.045);
-      ctx.fillStyle = token('--ink'); ctx.beginPath();
-      ctx.moveTo(sx - L, sy - 5); ctx.lineTo(sx + L * 0.7, sy - 5); ctx.lineTo(sx + L, sy); ctx.lineTo(sx + L * 0.7, sy + 5); ctx.lineTo(sx - L, sy + 5); ctx.closePath(); ctx.fill();
-      ctx.font = '500 11px "IBM Plex Mono", monospace'; ctx.textAlign = 'center'; ctx.fillText('사고 선박', sx, sy - 12);
-      if (on && forecast.length) { ctx.fillStyle = token('--blue'); ctx.font = '600 12px "IBM Plex Sans KR", sans-serif'; ctx.textAlign = 'left'; ctx.fillText('● 내일 기름 예상 위치', 12, H - 12); }
-      if (!on && released) {
-        let mx = 0, my = 0, c = 0;
-        for (let i = 0; i < released; i += 5) if (state[i] === 1) { mx += X[i]; my += Y[i]; c++; }
-        if (c) { mx /= c; my /= c; const q = token('--hot'); question(ctx, mx * S + 60, my * S - 30, 30, q); question(ctx, mx * S + 20, my * S + 50, 24, q); question(ctx, mx * S + 90, my * S + 20, 22, q); }
-      }
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      chip.className = 'chip ' + (on ? 'good' : 'unknown');
-      chip.textContent = on ? (hitRange ? '닿을 해안 예측 완료' : '물길 계산 중') : '예측 불가';
-    }
-    for (let k = 0; k < 14 * 30; k++) advance(1 / 30);
-    makeForecast(); draw();
-    onTheme(draw); onEq(draw);
-    if ('ResizeObserver' in window) new ResizeObserver(draw).observe(canvas);
-    animate(canvas, dt => { advance(reduceMotion ? dt * 0.5 : dt); draw(); });
-  })();
-
-  /* ---------- 혈관 ---------- */
-  (function initBlood() {
-    const canvas = $('#bloodCanvas'), ctx = canvas.getContext('2d'), slider = $('#rg-narrow'), read = $('#bloodRead');
-    const N = 240, xs = new Float32Array(N), ss = new Float32Array(N);
-    const W0 = 0.3, WALL = 0.12;
-    for (let i = 0; i < N; i++) { xs[i] = Math.random() * 1.1 - 0.05; ss[i] = (Math.random() * 2 - 1) * 0.9; }
-    let size = fit(canvas);
-    const n = () => +slider.value / 100;
-    const width = x => W0 * (1 - n() * Math.exp(-(((x - 0.5) / 0.09) ** 2)));
-    function update(dt) {
-      for (let i = 0; i < N; i++) {
-        const w = width(clamp(xs[i], 0, 1)), ratio = (W0 / w) ** 2;
-        xs[i] += Math.min(0.09 * ratio * 1.6 * (1 - ss[i] * ss[i] * 0.85) * dt, 0.02);
-        if (xs[i] > 1.05) { xs[i] = -0.05; ss[i] = (Math.random() * 2 - 1) * 0.9; }
-      }
-    }
-    function draw() {
-      size = fit(canvas);
-      const W = size.w, H = size.h, cy = H / 2, on = EQ.on;
-      ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
-      ctx.fillStyle = token('--tank'); ctx.fillRect(0, 0, W, H);
-      const outer = (W0 + WALL) * H;
-      ctx.fillStyle = on ? token('--vessel') : token('--solid'); ctx.fillRect(0, cy - outer, W, outer * 2);
-      ctx.fillStyle = on ? token('--plaque') : token('--muted');
-      for (const sgn of [-1, 1]) {
-        ctx.beginPath(); ctx.moveTo(0, cy + sgn * W0 * H);
-        for (let k = 0; k <= 120; k++) { const x = k / 120; ctx.lineTo(x * W, cy + sgn * width(x) * H); }
-        ctx.lineTo(W, cy + sgn * W0 * H); ctx.closePath(); ctx.fill();
-      }
-      ctx.fillStyle = on ? token('--plasma') : token('--tank'); ctx.beginPath();
-      for (let k = 0; k <= 120; k++) { const x = k / 120; ctx.lineTo(x * W, cy - width(x) * H); }
-      for (let k = 120; k >= 0; k--) { const x = k / 120; ctx.lineTo(x * W, cy + width(x) * H); }
-      ctx.closePath(); ctx.fill();
-      if (on) {
-        const R = Math.max(3, H * 0.026);
-        ctx.fillStyle = token('--blood');
-        for (let i = 0; i < N; i++) {
-          const x = clamp(xs[i], 0, 1), w = width(x), stretch = 1 + Math.min((W0 / w) ** 2 - 1, 6) * 0.22;
-          ctx.beginPath(); ctx.ellipse(xs[i] * W, cy + ss[i] * w * H, R * stretch, R / Math.sqrt(stretch), 0, 0, Math.PI * 2); ctx.fill();
-        }
-      } else {
-        question(ctx, W * 0.5, cy, Math.max(26, H * 0.22), token('--hot'));
-        question(ctx, W * 0.22, cy, Math.max(18, H * 0.14), token('--muted'));
-        question(ctx, W * 0.78, cy, Math.max(18, H * 0.14), token('--muted'));
-      }
-      ctx.fillStyle = token('--muted'); ctx.font = '500 11px "IBM Plex Mono", monospace'; ctx.textAlign = 'left';
-      const ty = Math.max(13, cy - outer - 7);
-      ctx.fillText(on ? '피의 흐름 →' : 'CT 사진', 10, ty);
-      if (n() > 0.08) { ctx.textAlign = 'center'; ctx.fillText('플라크(쌓인 찌꺼기)', W * 0.5, ty); }
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-    }
-    function updateRead() {
-      const k = n(), ratio = 1 / (1 - k) ** 2;
-      if (!EQ.on) read.innerHTML = '혈관이 좁아진 모양은 보이지만, 피가 얼마나 빨라지는지는 <b>알 수 없습니다</b>.';
-      else read.innerHTML = k < 0.02 ? '혈관이 깨끗합니다. 피가 고르게 흐릅니다.' : `지름이 <b>${Math.round(k * 100)}%</b> 좁아지면, 가장 좁은 곳에서 피가 <b>약 ${ratio.toFixed(1)}배</b> 빨라집니다.`;
-    }
-    slider.addEventListener('input', () => { updateRead(); draw(); });
-    onTheme(draw); onEq(() => { updateRead(); draw(); });
-    if ('ResizeObserver' in window) new ResizeObserver(draw).observe(canvas);
-    updateRead(); draw();
-    animate(canvas, dt => { update(reduceMotion ? dt * 0.4 : dt); draw(); });
-  })();
-
-  /* ---------- 교실 환기 ---------- */
-  const ROOM = { mode: 'closed', WIN: [0.3, 0.62], KIDS: [0.2, 0.35, 0.5, 0.65, 0.8], HEAD: 0.58, REF: 0.3 };
-  function roomForce(s, dt, tank) {
-    const { nx, ny, W, u } = s, d0 = s.dye[0], d1 = s.dye[1], t = tank.t;
-    for (let k = 0; k < ROOM.KIDS.length; k++) {
-      const x = ROOM.KIDS[k], br = 0.5 + 0.5 * Math.sin(t * 2.2 + k * 1.7);
-      s.splat((x + 0.035) * nx + 0.5, ROOM.HEAD * ny + 0.5, 0.05 * br, -0.02, ny * 0.035, 0, 0.06 * br);
-      s.splat(x * nx + 0.5, 0.78 * ny + 0.5, 0, -0.03, ny * 0.05, 0, 0);
-    }
-    const j0 = Math.round(ROOM.WIN[0] * ny) + 1, j1 = Math.round(ROOM.WIN[1] * ny), mid = (j0 + j1) >> 1;
-    tank.params.decay[0] = { closed: 0.9994, one: 0.9986, cross: 0.9965 }[ROOM.mode];
-    if (ROOM.mode === 'one') {
-      for (let j = j0; j <= j1; j++) {
-        const dir = j > mid ? 1 : -1;
-        for (let i = 1; i <= 5; i++) u[i + j * W] += dir * 0.045 * (1 - (i - 1) / 5);
-        for (let i = 1; i <= 2; i++) {
-          const id = i + j * W;
-          d0[id] *= 0.55;
-          if (dir > 0) d1[id] = Math.min(d1[id] + 0.12, 2); else d1[id] *= 0.55;
-        }
-      }
-    } else if (ROOM.mode === 'cross') {
-      for (let j = j0; j <= j1; j++) {
-        for (let i = 1; i <= 5; i++) u[i + j * W] += 0.07 * (1 - (i - 1) / 5);
-        for (let i = nx - 4; i <= nx; i++) u[i + j * W] += 0.07 * (1 - (nx - i) / 5);
-        for (let i = 1; i <= 2; i++) { const id = i + j * W; d1[id] = Math.min(d1[id] + 0.18, 2); d0[id] *= 0.5; }
-        for (let i = nx - 2; i <= nx; i++) { const id = i + j * W; d0[id] *= 0.35; d1[id] *= 0.35; }
-      }
-    }
-  }
-  function roomOverlay(ctx, W, H) {
-    if (!EQ.on) { ctx.fillStyle = token('--tank'); ctx.fillRect(0, 0, W, H); }
-    const ink = token('--ink'), solid = token('--solid'), teal = token('--teal'), muted = token('--muted');
-    const wy0 = ROOM.WIN[0] * H, wy1 = ROOM.WIN[1] * H, open = { closed: [0, 0], one: [1, 0], cross: [1, 1] }[ROOM.mode];
-    ctx.lineCap = 'round'; ctx.strokeStyle = ink; ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.moveTo(0, 2); ctx.lineTo(W, 2); ctx.moveTo(0, H - 2); ctx.lineTo(W, H - 2); ctx.stroke();
-    for (const [side, x] of [[0, 2.5], [1, W - 2.5]]) {
-      ctx.strokeStyle = ink; ctx.lineWidth = 5;
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, wy0); ctx.moveTo(x, wy1); ctx.lineTo(x, H); ctx.stroke();
-      if (!open[side]) { ctx.strokeStyle = rgba('--blue', 0.55); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, wy0); ctx.lineTo(x, wy1); ctx.stroke(); }
-      ctx.fillStyle = muted; ctx.font = '500 11px "IBM Plex Mono", monospace'; ctx.textAlign = side ? 'right' : 'left';
-      ctx.fillText(open[side] ? '창문 열림' : '창문', side ? W - 10 : 10, wy0 - 8);
-    }
-    if (EQ.on) {
-      const arrow = (x, y, dir) => {
-        ctx.strokeStyle = teal; ctx.fillStyle = teal; ctx.lineWidth = 2.5;
-        const L = Math.min(34, W * 0.06);
-        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dir * L, y); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x + dir * (L + 6), y); ctx.lineTo(x + dir * L, y - 5); ctx.lineTo(x + dir * L, y + 5); ctx.fill();
-      };
-      const wm = (wy0 + wy1) / 2;
-      if (ROOM.mode === 'one') { arrow(10, wm + (wy1 - wm) * 0.5, 1); arrow(10 + Math.min(40, W * 0.07), wm - (wm - wy0) * 0.5, -1); }
-      if (ROOM.mode === 'cross') { arrow(10, wm, 1); arrow(W - 10 - Math.min(40, W * 0.07), wm, 1); }
-    }
-    const R = H * 0.05;
-    ctx.fillStyle = solid;
-    for (const k of ROOM.KIDS) {
-      const x = k * W, y = ROOM.HEAD * H;
-      ctx.beginPath(); ctx.arc(x, y, R, 0, Math.PI * 2); ctx.fill();
-      roundRect(ctx, x - R * 1.15, y + R * 1.25, R * 2.3, R * 3.2, R * 0.8); ctx.fill();
-      ctx.fillRect(x + R * 1.3, y + R * 2.4, R * 3.2, R * 0.45);
-      ctx.fillRect(x + R * 4.1, y + R * 2.4, R * 0.35, H - (y + R * 2.4));
-    }
-    if (!EQ.on) for (const k of ROOM.KIDS) question(ctx, (k + 0.06) * W, (ROOM.HEAD - 0.16) * H, Math.max(16, H * 0.09), token('--hot'));
-  }
-  const roomBar = $('#roomBar'), roomState = $('#roomState');
-  let roomFrame = 0;
-  function roomMeter(tank) {
-    if (!EQ.on) {
-      roomBar.style.width = '0%'; roomState.className = 'chip unknown'; roomState.textContent = '알 수 없음'; return;
-    }
-    const s = tank.sim, d = s.dye[0];
-    let sum = 0;
-    for (let j = 1; j <= s.ny; j++) for (let i = 1; i <= s.nx; i++) sum += d[i + j * s.W];
-    const pct = clamp(sum / (s.nx * s.ny) / ROOM.REF, 0, 1);
-    roomBar.style.width = (pct * 100).toFixed(0) + '%';
-    const st = pct > 0.62 ? ['bad', '답답해요', '--hot'] : pct > 0.32 ? ['warn', '조금 탁해요', '--orange'] : ['good', '상쾌해요', '--teal'];
-    roomState.className = 'chip ' + st[0]; roomState.textContent = st[1];
-    roomBar.style.backgroundColor = `var(${st[2]})`;
-  }
-  const room = new Tank($('#roomCanvas'), {
-    ny: [52, 62], stir: false, pigments: ['--orange', '--teal', '--blue'], alphaK: 2.2,
-    params: { vort: 4, decay: [0.9994, 0.994, 0.99] },
-    init(s) {
-      const d = s.dye[0];
-      for (let j = 1; j <= s.ny; j++) for (let i = 1; i <= s.nx; i++) {
-        const y = j / s.ny;
-        d[i + j * s.W] = 0.3 * (0.75 + 0.5 * y) * (0.8 + 0.4 * Math.sin(i * 0.21 + j * 0.13) * Math.sin(j * 0.17 - i * 0.05));
-      }
-    },
-    force: roomForce, overlay: roomOverlay,
-    onFrame(t) { if (++roomFrame % 10 === 0) roomMeter(t); }
-  });
-  roomMeter(room);
-  bindSeg('roomSeg', 'mode', m => { ROOM.mode = m; room.draw(); room.anim.start(); });
-  onEq(() => { room.draw(); roomMeter(room); });
-
-  /* ---------- 태풍 ---------- */
-  (function initStorm() {
-    const canvas = $('#stormCanvas'), ctx = canvas.getContext('2d');
-    const trail = document.createElement('canvas'), tctx = trail.getContext('2d');
-    const small = innerWidth < 700, N = small ? 900 : 1600;
-    const X = new Float32Array(N), Y = new Float32Array(N), age = new Float32Array(N), life = new Float32Array(N);
-    const P0 = [0.34, 0.95], P1 = [0.22, 0.3], P2 = [0.88, 0.06], DUR = 28;
-    let size = fit(canvas), clock = 4, cols = {};
-    const bez = s => { const a = (1 - s) * (1 - s), b = 2 * (1 - s) * s, c = s * s; return [a * P0[0] + b * P1[0] + c * P2[0], a * P0[1] + b * P1[1] + c * P2[1]]; };
-    function readColors() {
-      cols = { bg: token('--tank'), slow: rgbTok('--flow-slow'), mid: rgbTok('--flow-mid'), fast: rgbTok('--flow-fast'), hot: rgbTok('--hot'), land: token('--land'), ink: token('--ink'), blue: token('--blue'), muted: token('--muted'), red: token('--hot') };
-      tctx.setTransform(1, 0, 0, 1, 0, 0); tctx.fillStyle = cols.bg; tctx.fillRect(0, 0, trail.width, trail.height);
-    }
-    function spawn(i) { X[i] = Math.random() * size.w; Y[i] = Math.random() * size.h; age[i] = 0; life[i] = 2 + Math.random() * 4; }
-    function resize() {
-      const old = size; size = fit(canvas);
-      trail.width = canvas.width; trail.height = canvas.height;
-      for (let i = 0; i < N; i++) { X[i] *= size.w / old.w; Y[i] *= size.h / old.h; }
-      readColors();
-    }
-    function land(c, W, H) {
-      c.beginPath(); c.moveTo(W * 0.5, 0);
-      c.bezierCurveTo(W * 0.56, H * 0.14, W * 0.66, H * 0.2, W * 0.7, H * 0.3);
-      c.bezierCurveTo(W * 0.74, H * 0.4, W * 0.84, H * 0.42, W * 0.9, H * 0.36);
-      c.bezierCurveTo(W * 0.95, H * 0.32, W * 0.97, H * 0.44, W, H * 0.48);
-      c.lineTo(W, 0); c.closePath();
-    }
-    const tmp = [0, 0, 0];
-    let cur = { s: 0, cx: 0, cy: 0, Rm: 1 };
-    function step(dt) {
-      clock += dt;
-      const W = size.w, H = size.h, m = Math.min(W, H);
-      const s = (clock % DUR) / DUR, c = bez(s), cx = c[0] * W, cy = c[1] * H;
-      const c2 = bez(Math.min(s + 0.001, 1)), mvx = (c2[0] - c[0]) * W / (DUR * 0.001), mvy = (c2[1] - c[1]) * H / (DUR * 0.001);
-      const Rm = m * 0.05, V = m * 0.75;
-      cur = { s, cx, cy, Rm };
-      const t = tctx; t.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
-      t.globalAlpha = 0.16; t.fillStyle = cols.bg; t.fillRect(0, 0, W, H); t.globalAlpha = 1;
-      t.lineWidth = 1.4; t.lineCap = 'round';
-      for (let i = 0; i < N; i++) {
-        const dx = X[i] - cx, dy = Y[i] - cy, r = Math.hypot(dx, dy) + 1e-3;
-        const vt = r < Rm ? V * r / Rm : V * Math.pow(Rm / r, 0.62);
-        const vr = r < Rm ? 0.1 * vt : -0.32 * vt;
-        const vx = (dy / r) * vt + (dx / r) * vr + mvx * 0.8, vy = (-dx / r) * vt + (dy / r) * vr + mvy * 0.8;
-        const nxp = X[i] + vx * dt, nyp = Y[i] + vy * dt;
-        age[i] += dt;
-        if (r < Rm * 0.55 || age[i] > life[i] || nxp < -10 || nyp < -10 || nxp > W + 10 || nyp > H + 10) { spawn(i); continue; }
-        const col = speedRGB(tmp, vt / (V * 0.45), cols.slow, cols.mid, cols.fast, cols.hot);
-        t.strokeStyle = `rgb(${col[0] | 0},${col[1] | 0},${col[2] | 0})`;
-        t.beginPath(); t.moveTo(X[i], Y[i]); t.lineTo(nxp, nyp); t.stroke();
-        X[i] = nxp; Y[i] = nyp;
-      }
-      draw();
-    }
-    function draw() {
-      const W = size.w, H = size.h, { s, cx, cy, Rm } = cur;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.drawImage(trail, 0, 0);
-      ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
-      ctx.globalAlpha = 0.9; ctx.fillStyle = cols.land; land(ctx, W, H); ctx.fill(); ctx.globalAlpha = 1;
-      ctx.fillStyle = cols.muted; ctx.font = '500 12px "IBM Plex Mono", monospace'; ctx.textAlign = 'right'; ctx.fillText('육지', W - 14, 22);
-      ctx.fillStyle = cols.bg; ctx.beginPath(); ctx.arc(cx, cy, Rm * 0.5, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = cols.ink; ctx.lineWidth = 1.5; ctx.stroke();
-      ctx.font = '600 12px "IBM Plex Sans KR", sans-serif'; ctx.textAlign = 'left';
-      ctx.lineWidth = 2.5; ctx.strokeStyle = cols.ink;
-      ctx.beginPath();
-      for (let k = 0; k <= 40; k++) { const q = bez(s * k / 40); k ? ctx.lineTo(q[0] * W, q[1] * H) : ctx.moveTo(q[0] * W, q[1] * H); }
-      ctx.stroke();
-      if (EQ.on) {
-        ctx.strokeStyle = cols.blue; ctx.setLineDash([7, 6]); ctx.beginPath();
-        for (let k = 0; k <= 40; k++) { const q = bez(s + (1 - s) * k / 40); k ? ctx.lineTo(q[0] * W, q[1] * H) : ctx.moveTo(q[0] * W, q[1] * H); }
-        ctx.stroke(); ctx.setLineDash([]);
-        for (let d = 1; d <= 3; d++) {
-          const q = s + d * 0.1; if (q > 1) break;
-          const p = bez(q), rr = 10 + d * 9;
-          ctx.fillStyle = rgba('--blue', 0.1); ctx.beginPath(); ctx.arc(p[0] * W, p[1] * H, rr, 0, Math.PI * 2); ctx.fill();
-          ctx.strokeStyle = rgba('--blue', 0.5); ctx.lineWidth = 1; ctx.stroke();
-          ctx.fillStyle = cols.blue; ctx.fillText(`+${d}일`, p[0] * W + rr + 4, p[1] * H + 4);
-        }
-      } else {
-        const dirs = [-2.4, -1.5, -0.6, 0.3, 1.2, 2.3];
-        ctx.strokeStyle = cols.red; ctx.lineWidth = 2; ctx.setLineDash([4, 5]);
-        dirs.forEach(a => {
-          const x1 = cx + Math.cos(a) * Rm * 2.2, y1 = cy + Math.sin(a) * Rm * 2.2, x2 = cx + Math.cos(a) * Rm * 4.4, y2 = cy + Math.sin(a) * Rm * 4.4;
-          ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-          question(ctx, cx + Math.cos(a) * Rm * 5.4, cy + Math.sin(a) * Rm * 5.4, 18, cols.red);
-        });
-        ctx.setLineDash([]);
-      }
-      ctx.fillStyle = cols.ink; ctx.textAlign = 'left'; ctx.font = '600 12px "IBM Plex Sans KR", sans-serif'; ctx.fillText('지금', cx + Rm + 6, cy - Rm - 4);
-    }
-    resize();
-    for (let i = 0; i < N; i++) spawn(i);
-    for (let k = 0; k < 40; k++) step(1 / 60);
-    onTheme(() => { readColors(); step(0); });
-    onEq(() => draw());
-    if ('ResizeObserver' in window) new ResizeObserver(() => { const r = canvas.getBoundingClientRect(); if (Math.abs(r.width - size.w) > 1 || Math.abs(r.height - size.h) > 1) { resize(); step(0); } }).observe(canvas);
-    animate(canvas, dt => step(reduceMotion ? dt * 0.4 : dt));
-  })();
-
-  /* ---------- 3D 가상 풍동 ---------- */
-  const TEAR = { src: -1.0, sinks: [[-0.2, 0.25], [0.5, 0.25], [1.2, 0.25], [1.9, 0.25]], k: 2.4 / (4 * Math.PI) };
-  function tearPsi(x, w) {
-    let c = (x - TEAR.src) / Math.hypot(x - TEAR.src, w);
-    for (const [sx, q] of TEAR.sinks) c -= q * (x - sx) / Math.hypot(x - sx, w);
-    return 0.5 * w * w - TEAR.k * c;
-  }
-  const SHAPES = {
-    sphere: {
-      vel(x, y, z, o) {
-        const r2 = x * x + y * y + z * z, r = Math.sqrt(r2), k = 1.5 / (r2 * r2 * r);
-        o[0] = 1 + 0.5 / (r2 * r) - k * x * x; o[1] = -k * x * y; o[2] = -k * x * z;
-      },
-      inside: (x, y, z) => x * x + y * y + z * z < 1.0,
-      tail: 0.95, width: 0.95, wake: 1.0
-    },
-    tear: {
-      vel(x, y, z, o) {
-        let vx = 1, vy = 0, vz = 0, dx = x - TEAR.src, r2 = dx * dx + y * y + z * z, r3 = r2 * Math.sqrt(r2) + 1e-9;
-        vx += TEAR.k * dx / r3; vy += TEAR.k * y / r3; vz += TEAR.k * z / r3;
-        for (const [sx, q] of TEAR.sinks) {
-          dx = x - sx; r2 = dx * dx + y * y + z * z; r3 = r2 * Math.sqrt(r2) + 1e-9;
-          const f = TEAR.k * q / r3; vx -= f * dx; vy -= f * y; vz -= f * z;
-        }
-        o[0] = vx; o[1] = vy; o[2] = vz;
-      },
-      inside: (x, y, z) => x > -1.5 && x < 2.25 && tearPsi(x, Math.hypot(y, z)) < 0,
-      tail: 2.1, width: 0.4, wake: 0.22
-    }
-  };
-  const notes = {
-    sphere: '공 옆을 지나는 공기는 빨라지고(주황색), 공 뒤에는 흐트러진 소용돌이 꼬리가 생겨 공을 뒤로 잡아당깁니다. 이것이 공기 저항입니다.',
-    tear: '물방울 모양은 뒤로 갈수록 가늘어져 공기가 매끄럽게 다시 모입니다. 꼬리가 작아 공기 저항이 공의 10분의 1도 되지 않고, 그만큼 연료가 덜 듭니다.'
-  };
-  $('#shapeNote').textContent = notes.sphere;
-
-  (function initTunnel() {
-    const host = $('#tunnel'), canvas = host.querySelector('canvas');
-    if (!window.THREE) { host.classList.add('no3d'); return; }
-    let renderer;
-    try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); } catch (e) { host.classList.add('no3d'); return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    const small = innerWidth < 700;
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(34, 1.4, 0.1, 100);
-    const target = new THREE.Vector3(0.9, -0.2, 0);
-    const orbit = { r: small ? 13.5 : 11.5, theta: 1.95, phi: 1.22, lastUser: -1e9 };
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.7));
-    const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(3, 6, 5); scene.add(sun);
-
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x999999, roughness: 0.55, metalness: 0.05, side: THREE.DoubleSide });
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.98, 64, 40), bodyMat);
-    const prof = [new THREE.Vector2(0, -1.47)];
-    for (let x = -1.45; x <= 2.2; x += 0.025) {
-      if (tearPsi(x, 0.01) >= 0) continue;
-      let lo = 0.01, hi = 3;
-      for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (tearPsi(x, m) < 0) lo = m; else hi = m; }
-      prof.push(new THREE.Vector2(lo, x));
-    }
-    prof.push(new THREE.Vector2(0, prof[prof.length - 1].y + 0.04));
-    const tear = new THREE.Mesh(new THREE.LatheGeometry(prof, 72), bodyMat);
-    tear.rotation.z = -Math.PI / 2; tear.scale.set(0.98, 1, 0.98); tear.visible = false;
-    scene.add(sphere, tear);
-
-    const N = small ? 600 : 1000, T = 34, SEG = T - 1;
-    const P = new Float32Array(N * 3), trail = new Float32Array(N * T * 3), head = new Int16Array(N);
-    const age = new Float32Array(N), life = new Float32Array(N), spd = new Float32Array(N);
-    const segPos = new Float32Array(N * SEG * 6), segCol = new Float32Array(N * SEG * 6);
-    const lineGeo = new THREE.BufferGeometry();
-    lineGeo.setAttribute('position', new THREE.BufferAttribute(segPos, 3));
-    lineGeo.setAttribute('color', new THREE.BufferAttribute(segCol, 3));
-    const lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({ vertexColors: true }));
-    lines.frustumCulled = false; scene.add(lines);
-
-    let shape = SHAPES.sphere, wind = 1, time = 0, grid = null, arrow = null;
-    let cBg = [1, 1, 1], cSlow = [0, 0, 1], cMid = [.5, .5, .5], cFast = [1, .5, 0];
-    const norm = c => [c[0] / 255, c[1] / 255, c[2] / 255];
-    function readColors() {
-      scene.background = new THREE.Color(token('--tank'));
-      cBg = norm(rgbTok('--tank')); cSlow = norm(rgbTok('--flow-slow')); cMid = norm(rgbTok('--flow-mid')); cFast = norm(rgbTok('--flow-fast'));
-      bodyMat.color.set(token('--solid'));
-      if (grid) scene.remove(grid);
-      grid = new THREE.GridHelper(18, 18, new THREE.Color(token('--line')), new THREE.Color(token('--line')));
-      grid.position.set(0.8, -3.1, 0); scene.add(grid);
-      if (arrow) scene.remove(arrow);
-      arrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-8.4, 0, 0), 1.5, new THREE.Color(token('--muted')).getHex(), 0.42, 0.26);
-      scene.add(arrow);
-    }
-    const tmpC = [0, 0, 0];
-    const speedColor = s => s < 1 ? mix3(tmpC, cSlow, cMid, clamp(s, 0, 1) ** 1.4) : mix3(tmpC, cMid, cFast, clamp((s - 1) / 0.45, 0, 1));
-    function spawn(i, anywhere) {
-      let x, y, z;
-      for (let tries = 0; tries < 20; tries++) {
-        const ang = Math.random() * Math.PI * 2, rad = 2.6 * Math.pow(Math.random(), 0.7);
-        x = anywhere ? -7 + Math.random() * 14 : -7.2 + Math.random() * 0.6;
-        y = rad * Math.cos(ang); z = rad * Math.sin(ang);
-        if (!shape.inside(x, y, z)) break;
-      }
-      P[i * 3] = x; P[i * 3 + 1] = y; P[i * 3 + 2] = z;
-      for (let k = 0; k < T; k++) { const o = (i * T + k) * 3; trail[o] = x; trail[o + 1] = y; trail[o + 2] = z; }
-      head[i] = 0; age[i] = 0; life[i] = 10 + Math.random() * 8; spd[i] = 1;
-    }
-    const k1 = [0, 0, 0], k2 = [0, 0, 0];
-    function vel(x, y, z, o) {
-      shape.vel(x, y, z, o);
-      const w = shape.wake * clamp((wind - 0.3) / 0.9, 0.1, 1.25), dx = x - shape.tail;
-      if (dx > -0.3) {
-        const rho = Math.hypot(y, z), width = shape.width * (1 + 0.13 * Math.max(dx, 0));
-        const s1 = clamp((dx + 0.3) / 0.9, 0, 1);
-        const env = Math.exp(-(rho * rho) / (width * width)) * s1 * s1 * (3 - 2 * s1) * Math.exp(-Math.max(dx, 0) / 7);
-        const s = w * env, ph = 2.3 * dx - 3.2 * time;
-        o[0] -= 0.5 * s; o[1] += 0.62 * s * Math.sin(ph); o[2] += 0.4 * s * Math.cos(0.7 * ph + 1.3);
-        if (rho > 1e-3) { const sw = 0.55 * s * Math.sin(0.5 * ph + 0.8); o[1] -= z / rho * sw; o[2] += y / rho * sw; }
-      }
-    }
-    function stepParticles(dt) {
-      time += dt;
-      for (let i = 0; i < N; i++) {
-        const b = i * 3; let x = P[b], y = P[b + 1], z = P[b + 2];
-        vel(x, y, z, k1);
-        vel(x + 0.5 * dt * k1[0], y + 0.5 * dt * k1[1], z + 0.5 * dt * k1[2], k2);
-        x += dt * k2[0]; y += dt * k2[1]; z += dt * k2[2]; age[i] += dt;
-        if (x > 7.6 || Math.abs(y) > 3.6 || Math.abs(z) > 3.6 || age[i] > life[i] || shape.inside(x, y, z)) { spawn(i, false); continue; }
-        P[b] = x; P[b + 1] = y; P[b + 2] = z;
-        const h = (head[i] + 1) % T; head[i] = h;
-        const o = (i * T + h) * 3; trail[o] = x; trail[o + 1] = y; trail[o + 2] = z;
-        spd[i] += (Math.hypot(k2[0], k2[1], k2[2]) - spd[i]) * 0.3;
-      }
-    }
-    function writeBuffers() {
-      let o = 0;
-      const b0 = cBg[0], b1 = cBg[1], b2 = cBg[2];
-      for (let i = 0; i < N; i++) {
-        const c = speedColor(spd[i]), cr = c[0], cg = c[1], cb = c[2], h = head[i], base = i * T;
-        for (let m = 0; m < SEG; m++) {
-          const a = (base + (h + 1 + m) % T) * 3, bb = (base + (h + 2 + m) % T) * 3;
-          segPos[o] = trail[a]; segPos[o + 1] = trail[a + 1]; segPos[o + 2] = trail[a + 2];
-          segPos[o + 3] = trail[bb]; segPos[o + 4] = trail[bb + 1]; segPos[o + 5] = trail[bb + 2];
-          const f0 = (m / SEG) ** 0.75, f1 = ((m + 1) / SEG) ** 0.75;
-          segCol[o] = b0 + (cr - b0) * f0; segCol[o + 1] = b1 + (cg - b1) * f0; segCol[o + 2] = b2 + (cb - b2) * f0;
-          segCol[o + 3] = b0 + (cr - b0) * f1; segCol[o + 4] = b1 + (cg - b1) * f1; segCol[o + 5] = b2 + (cb - b2) * f1;
-          o += 6;
-        }
-      }
-      lineGeo.attributes.position.needsUpdate = true; lineGeo.attributes.color.needsUpdate = true;
-    }
-    function render() {
-      const { r, theta, phi } = orbit;
-      camera.position.set(target.x + r * Math.sin(phi) * Math.cos(theta), target.y + r * Math.cos(phi), target.z + r * Math.sin(phi) * Math.sin(theta));
-      camera.lookAt(target); renderer.render(scene, camera);
-    }
-    function fitR() {
-      const r = canvas.getBoundingClientRect(); if (r.width < 10 || r.height < 10) return;
-      renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix();
-    }
-    readColors();
-    onTheme(() => { readColors(); writeBuffers(); render(); });
-    onEq(on => { lines.visible = on; render(); });
-    for (let i = 0; i < N; i++) spawn(i, true);
-    for (let k = 0; k < T + 30; k++) stepParticles(0.03);
-    fitR(); writeBuffers(); render();
-    if ('ResizeObserver' in window) new ResizeObserver(() => { fitR(); render(); }).observe(canvas);
-    const anim = animate(canvas, () => {
-      if (!reduceMotion && performance.now() - orbit.lastUser > 4000) orbit.theta += 0.0012;
-      stepParticles(0.022 * wind); writeBuffers(); render();
-    });
-
-    let drag = null;
-    canvas.tabIndex = 0;
-    canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, id: e.pointerId, type: e.pointerType }; try { canvas.setPointerCapture(e.pointerId); } catch (_) {} canvas.style.cursor = 'grabbing'; orbit.lastUser = performance.now(); });
-    canvas.addEventListener('pointermove', e => {
-      if (!drag || e.pointerId !== drag.id) return;
-      const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
-      orbit.theta += dx * 0.008;
-      if (drag.type === 'mouse') orbit.phi = clamp(orbit.phi - dy * 0.006, 0.35, 2.75);
-      orbit.lastUser = performance.now(); if (!anim.visible) render();
-    });
-    const end = e => { if (drag && e.pointerId === drag.id) { drag = null; canvas.style.cursor = 'grab'; } };
-    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(n => canvas.addEventListener(n, end));
-    canvas.addEventListener('keydown', e => {
-      const k = { ArrowLeft: -0.12, ArrowRight: 0.12 }[e.key]; if (!k) return;
-      e.preventDefault(); orbit.theta += k; orbit.lastUser = performance.now(); render();
-    });
-
-    bindSeg('shapeSeg', 'shape', k => {
-      shape = SHAPES[k]; sphere.visible = k === 'sphere'; tear.visible = !sphere.visible;
-      document.querySelectorAll('.drag-row').forEach(r => r.classList.toggle('is-on', r.dataset.shape === k));
-      $('#shapeNote').textContent = notes[k];
-      for (let i = 0; i < N; i++) if (shape.inside(P[i * 3], P[i * 3 + 1], P[i * 3 + 2])) spawn(i, false);
-      writeBuffers(); render();
-    });
-    $('#rg-wind').addEventListener('input', e => { wind = +e.target.value / 100; });
-  })();
-
-  /* ---------- 프리킥 ---------- */
-  (function initKick() {
-    const canvas = $('#kickCanvas'), ctx = canvas.getContext('2d');
-    const btn = $('#kickBtn'), out = $('#kickResult'), spinIn = $('#rg-spin');
-    const GOAL_Y = 25, POST = 3.66, WALL_Y = 9.15, WALL = [-1.2, -0.6, 0, 0.6], PR = 0.3, BR = 0.11;
-    const KEEPER = [2.2, 24.6], REACH = 1.0, AIM = [2.0, WALL_Y], V0 = 28, DRAG = 0.013;
-    const MSG = {
-      goal: '골! 공이 벽을 돌아 들어갔어요',
-      wall: '수비벽에 맞았어요. 회전을 줄여 보세요',
-      keeper: '골키퍼가 막았어요. 조금 더 휘게 해 보세요',
-      right: '오른쪽으로 빗나갔어요. 회전을 더 주세요',
-      left: '왼쪽으로 빗나갔어요. 회전을 줄여 보세요'
+    const coastX = z => 4.3 + 0.8 * Math.sin(z * 0.6 + 0.3) + 0.3 * Math.sin(z * 1.7 + 1.0);
+    const dist = (x, z) => x - coastX(z);
+    const height = (x, z) => {
+      const d = dist(x, z);
+      if (d < 0) return Math.max(-1.2, -0.04 + d * 0.28);
+      const hills = Math.pow(Math.max(0, d - 1.5), 1.1) * (0.38 + 0.35 * noise(x * 0.7, z * 0.7));
+      return 0.05 + 0.18 * smooth(0, 0.6, d) + Math.min(hills, 2.4);
     };
-    let size = fit(canvas), ball = null, path = [], preview = null, spinAngle = 0;
-    const newBall = () => { const L = Math.hypot(AIM[0], AIM[1]), k = 25 * (+spinIn.value / 100) / V0; return { x: 0, y: 0, vx: V0 * AIM[0] / L, vy: V0 * AIM[1] / L, k, done: false, result: null }; };
-    function advance(b, simT, rec) {
-      while (simT > 0 && !b.done) {
-        const h = Math.min(1 / 240, simT); simT -= h;
-        const v = Math.hypot(b.vx, b.vy), py = b.y;
-        b.vx += (-DRAG * v * b.vx - b.k * b.vy) * h; b.vy += (-DRAG * v * b.vy + b.k * b.vx) * h;
-        b.x += b.vx * h; b.y += b.vy * h;
-        if (rec) rec.push([b.x, b.y]);
-        for (const wx of WALL) if (Math.hypot(b.x - wx, b.y - WALL_Y) < PR + BR) { b.done = true; b.result = 'wall'; }
-        if (b.done) break;
-        if (py < KEEPER[1] && b.y >= KEEPER[1] && Math.abs(b.x - KEEPER[0]) < REACH) { b.done = true; b.result = 'keeper'; break; }
-        if (b.y >= GOAL_Y) { b.done = true; b.result = Math.abs(b.x) < POST ? 'goal' : (b.x > 0 ? 'right' : 'left'); break; }
-        if (b.y > 30 || Math.abs(b.x) > 14) { b.done = true; b.result = b.x > 0 ? 'right' : 'left'; }
+    scene.add(buildTerrain(height, dist));
+    const sea = buildSea(); scene.add(sea);
+    const wave = (x, z, t) => 0.035 * Math.sin(0.9 * x + 1.3 * t) + 0.025 * Math.sin(1.4 * z - 1.1 * t + x * 0.3);
+
+    // 해안 마을
+    const roofs = [0xB9533E, 0x4B6C9C, 0x7C7C7C, 0xC7803A];
+    let hi = 0;
+    for (let z = -3.6; z <= 3.6; z += 0.8) {
+      for (const dd of [1.05, 1.75]) {
+        const jz = z + (hash(z, dd) - 0.5) * 0.35, x = coastX(jz) + dd + (hash(dd, z) - 0.5) * 0.25;
+        scene.add(house(x, height(x, jz), jz, roofs[hi++ % roofs.length], hash(x, z) * 0.6));
       }
     }
-    function makePreview() { const b = newBall(), pts = [[0, 0]]; advance(b, 3, pts); preview = { pts, result: b.result }; }
-    function draw() {
-      size = fit(canvas);
-      const W = size.w, H = size.h, sc = Math.min(W / 22, H / 30.5), X = x => W / 2 + x * sc, Y = y => H - (y + 2.6) * sc;
-      ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
-      ctx.fillStyle = token('--pitch'); ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = token('--pitch-dark');
-      for (let y = -3; y < 30; y += 6) ctx.fillRect(0, Y(y + 3), W, 3 * sc);
-      ctx.strokeStyle = token('--pitch-line'); ctx.lineWidth = 2;
-      const line = (x1, y1, x2, y2) => { ctx.beginPath(); ctx.moveTo(X(x1), Y(y1)); ctx.lineTo(X(x2), Y(y2)); ctx.stroke(); };
-      line(-12, GOAL_Y, 12, GOAL_Y); line(-12, GOAL_Y - 16.5, 12, GOAL_Y - 16.5);
-      line(-9.16, GOAL_Y, -9.16, GOAL_Y - 5.5); line(9.16, GOAL_Y, 9.16, GOAL_Y - 5.5); line(-9.16, GOAL_Y - 5.5, 9.16, GOAL_Y - 5.5);
-      ctx.beginPath(); ctx.arc(X(0), Y(GOAL_Y - 11), 9.15 * sc, Math.PI * 0.2, Math.PI * 0.8); ctx.stroke();
-      ctx.fillStyle = token('--pitch-line'); ctx.beginPath(); ctx.arc(X(0), Y(GOAL_Y - 11), 2.5, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = token('--ink'); ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(X(-POST), Y(GOAL_Y)); ctx.lineTo(X(-POST), Y(GOAL_Y + 2)); ctx.lineTo(X(POST), Y(GOAL_Y + 2)); ctx.lineTo(X(POST), Y(GOAL_Y)); ctx.stroke();
-      ctx.strokeStyle = rgba('--ink', 0.18); ctx.lineWidth = 1;
-      for (let x = -POST + 0.6; x < POST; x += 0.6) { ctx.beginPath(); ctx.moveTo(X(x), Y(GOAL_Y)); ctx.lineTo(X(x), Y(GOAL_Y + 2)); ctx.stroke(); }
-      const person = (x, y, col, label) => {
-        ctx.fillStyle = token(col); ctx.beginPath(); ctx.arc(X(x), Y(y), Math.max(PR * sc, 5), 0, Math.PI * 2); ctx.fill();
-        if (label) { ctx.fillStyle = token('--ink'); ctx.font = '500 11px "IBM Plex Sans KR", sans-serif'; ctx.textAlign = 'center'; ctx.fillText(label, X(x), Y(y) - PR * sc - 7); }
-      };
-      WALL.forEach((x, i) => person(x, WALL_Y, '--blue', i === 1 ? '수비벽' : ''));
-      person(KEEPER[0], KEEPER[1], '--teal', '골키퍼');
-      if (EQ.on && preview && !(ball && !ball.done)) {
-        ctx.strokeStyle = token('--blue'); ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath();
-        preview.pts.forEach((p, i) => i % 4 === 0 && (i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))));
-        const lp = preview.pts[preview.pts.length - 1]; ctx.lineTo(X(lp[0]), Y(lp[1])); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = token('--blue'); ctx.font = '600 12px "IBM Plex Sans KR", sans-serif'; ctx.textAlign = 'left';
-        ctx.fillText(preview.result === 'goal' ? '예상: 골' : '예상: 실패', 10, 20);
-      } else if (!EQ.on && !(ball && !ball.done)) {
-        question(ctx, X(1.4), Y(16), 30, token('--hot'));
-        ctx.strokeStyle = rgba('--ink', 0.55); ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5;
-        const L = Math.hypot(AIM[0], AIM[1]);
-        ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(AIM[0] / L * 5), Y(AIM[1] / L * 5)); ctx.stroke(); ctx.setLineDash([]);
-      }
-      if (path.length > 1) {
-        ctx.strokeStyle = token('--orange'); ctx.lineWidth = 2.5; ctx.beginPath();
-        path.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.stroke();
-      }
-      const bx = ball ? ball.x : 0, by = ball ? ball.y : 0, br = Math.max(BR * sc * 2.2, 6);
-      ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#1B2530'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.arc(X(bx), Y(by), br, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(X(bx) + Math.cos(spinAngle) * br, Y(by) - Math.sin(spinAngle) * br); ctx.lineTo(X(bx) - Math.cos(spinAngle) * br, Y(by) + Math.sin(spinAngle) * br); ctx.stroke();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const village = makeLabel('해안 마을', { size: 0.4 }); village.position.set(coastX(-2.6) + 1.7, 1.25, -2.6); scene.add(village);
+
+    // 유조선
+    const TANK = [-6.0, -0.3];
+    const tanker = new THREE.Group();
+    const hullM = new THREE.MeshLambertMaterial({ color: 0x7B2424 });
+    const hull = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.5), hullM); hull.position.y = 0.08; tanker.add(hull);
+    const deck = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.05, 0.46), new THREE.MeshLambertMaterial({ color: 0x5A6168 })); deck.position.y = 0.25; tanker.add(deck);
+    const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.36, 0.42), new THREE.MeshLambertMaterial({ color: 0xF2F2F2 })); bridge.position.set(-0.72, 0.45, 0); tanker.add(bridge);
+    const funnel = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.22, 12), new THREE.MeshLambertMaterial({ color: 0x2B2B2B })); funnel.position.set(-0.85, 0.72, 0); tanker.add(funnel);
+    tanker.position.set(TANK[0], 0, TANK[1]); tanker.rotation.y = 0.25; tanker.rotation.x = 0.06;
+    scene.add(tanker);
+    const tankerLabel = makeLabel('사고 유조선', { size: 0.4 }); tankerLabel.position.set(TANK[0], 1.25, TANK[1]); scene.add(tankerLabel);
+
+    // 해류
+    function current(x, z, t, o) {
+      let u = 0.5 + 0.12 * Math.cos(z * 0.55), w = 0.16 * Math.sin(x * 0.45 + t * 0.25);
+      const ex = x + 1.2, ez = z - 0.9, r = Math.hypot(ex, ez) + 1e-4;
+      const vt = r < 1.4 ? 0.55 * r / 1.4 : 0.55 * Math.pow(1.4 / r, 1.5);
+      u += (ez / r) * vt; w += (-ex / r) * vt;
+      const gap = coastX(z) - x;
+      if (gap < 1.2) { const f = clamp(gap / 1.2, 0.2, 1); u *= f; w = w * f + (1 - f) * 0.25; }
+      o[0] = u; o[1] = w;
     }
-    let raf = 0;
-    function kick() {
-      ball = newBall(); path = [[0, 0]]; out.hidden = true; btn.disabled = true;
-      let last = 0;
-      cancelAnimationFrame(raf);
-      const frame = now => {
-        const dtReal = last ? Math.min((now - last) / 1000, 0.05) : 1 / 60; last = now;
-        spinAngle += (+spinIn.value / 100) * 14 * dtReal;
-        advance(ball, dtReal * (reduceMotion ? 1 : 0.55), null);
-        path.push([ball.x, ball.y]);
-        if (ball.done) {
-          out.hidden = false; out.textContent = MSG[ball.result];
-          out.className = 'chip ' + (ball.result === 'goal' ? 'good' : 'warn');
-          btn.textContent = '다시 차기'; btn.disabled = false;
+
+    // 예상 도착 해안(결정론적 계산)
+    const o2 = [0, 0];
+    let landLo = 1e9, landHi = -1e9;
+    for (let k = 0; k < 90; k++) {
+      let x = TANK[0] + 0.55 + (hash(k, 1) - 0.5) * 0.7, z = TANK[1] + 0.1 + (hash(k, 2) - 0.5) * 0.9, t = (k / 90) * 8;
+      for (let s = 0; s < 800; s++) { current(x, z, t, o2); x += o2[0] * 0.05; z += o2[1] * 0.05; t += 0.05; if (x >= coastX(z) - 0.08) { landLo = Math.min(landLo, z); landHi = Math.max(landHi, z); break; } }
+    }
+    if (!(landLo < landHi)) { landLo = -1.5; landHi = 1.5; }
+    const BOOM = [landLo - 0.8, landHi + 0.8];
+    const boomX = z => coastX(z) - 1.1;
+
+    // 방정식이 있으면: 오일펜스, 방제선, 예상 해안
+    const floatGeo = new THREE.CylinderGeometry(0.055, 0.055, 0.09, 10), floatMat = new THREE.MeshLambertMaterial({ color: 0xF28C1B });
+    const boomPts = [];
+    for (let z = BOOM[0]; z <= BOOM[1]; z += 0.16) {
+      const f = new THREE.Mesh(floatGeo, floatMat); f.position.set(boomX(z), 0.05, z); S.onGroup.add(f); boomPts.push(new THREE.Vector3(boomX(z), 0.05, z));
+    }
+    S.onGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(boomPts), new THREE.LineBasicMaterial({ color: 0xF2C14E })));
+    const boomLabel = makeLabel('오일펜스', { size: 0.36, color: '#8A4A06' }); boomLabel.position.set(boomX(BOOM[0]) - 0.2, 0.7, BOOM[0] - 0.55); S.onGroup.add(boomLabel);
+    const rb1 = boat(0xF4F4F4, 0xF28C1B, 1.1); rb1.position.set(boomX(BOOM[0]) - 0.7, 0, BOOM[0] - 0.5); rb1.rotation.y = 0.9; S.onGroup.add(rb1);
+    const rb2 = boat(0xF4F4F4, 0xF28C1B, 1.1); rb2.position.set(boomX(BOOM[1]) - 0.7, 0, BOOM[1] + 0.5); rb2.rotation.y = -0.9; S.onGroup.add(rb2);
+    const coastPts = [];
+    for (let z = landLo - 0.3; z <= landHi + 0.3; z += 0.1) { const x = coastX(z) + 0.12; coastPts.push(new THREE.Vector3(x, height(x, z) + 0.04, z)); }
+    const landing = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(coastPts), 60, 0.06, 8, false), new THREE.MeshBasicMaterial({ color: 0xE0442A }));
+    S.onGroup.add(landing);
+    const landingLabel = makeLabel('기름이 닿을 해안 (예측)', { size: 0.36, color: '#B3301A' }); landingLabel.position.set(coastX(landHi + 0.9) + 1.0, 0.8, landHi + 0.9); S.onGroup.add(landingLabel);
+
+    // 해류 화살표(방정식이 있으면)
+    const SN = 280, sx = new Float32Array(SN), sz = new Float32Array(SN), sage = new Float32Array(SN), slife = new Float32Array(SN);
+    const streakPos = new Float32Array(SN * 6);
+    const streakGeo = new THREE.BufferGeometry(); streakGeo.setAttribute('position', new THREE.BufferAttribute(streakPos, 3));
+    const streaks = new THREE.LineSegments(streakGeo, new THREE.LineBasicMaterial({ color: 0xE6F6FF, transparent: true, opacity: 0.85 }));
+    streaks.frustumCulled = false; S.onGroup.add(streaks);
+    const respawnStreak = i => { for (let k = 0; k < 20; k++) { sx[i] = -11 + Math.random() * 15; sz[i] = -7 + Math.random() * 14; if (sx[i] < coastX(sz[i]) - 0.4) break; } sage[i] = 0; slife[i] = 2 + Math.random() * 3; };
+    for (let i = 0; i < SN; i++) { respawnStreak(i); sage[i] = Math.random() * slife[i]; }
+
+    // 기름 입자: A(방정식 없음), B(방정식 있음)
+    const N = 650, RELEASE = 8, DUR = 38;
+    const mkSet = () => ({ x: new Float32Array(N), z: new Float32Array(N), st: new Uint8Array(N) });
+    const A = mkSet(), B = mkSet();
+    const sizeJ = new Float32Array(N); for (let i = 0; i < N; i++) sizeJ[i] = 0.75 + 0.6 * hash(i, 7);
+    const discGeo = new THREE.CircleGeometry(0.17, 14); discGeo.rotateX(-Math.PI / 2);
+    const mkMesh = () => { const m = new THREE.InstancedMesh(discGeo, new THREE.MeshBasicMaterial({ color: 0x0C0C0E, transparent: true, opacity: 0.5, depthWrite: false }), N); m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); m.frustumCulled = false; m.renderOrder = 5; return m; };
+    const meshA = mkMesh(), meshB = mkMesh();
+    scene.add(meshA, meshB);
+    S.swaps.push(on => { meshA.visible = !on; meshB.visible = on; });
+
+    // 예측 점(방정식이 있으면)
+    const FN = 240, fPos = new Float32Array(FN * 3), fCol = new Float32Array(FN * 3), fAl = new Float32Array(FN), fSz = new Float32Array(FN);
+    for (let i = 0; i < FN; i++) { fCol[i * 3] = 0.16; fCol[i * 3 + 1] = 0.42; fCol[i * 3 + 2] = 0.9; fSz[i] = 0.34; }
+    const fGeo = new THREE.BufferGeometry();
+    fGeo.setAttribute('position', new THREE.BufferAttribute(fPos, 3)); fGeo.setAttribute('aColor', new THREE.BufferAttribute(fCol, 3));
+    fGeo.setAttribute('aAlpha', new THREE.BufferAttribute(fAl, 1)); fGeo.setAttribute('aSize', new THREE.BufferAttribute(fSz, 1));
+    const fMat = pointsMaterial(); S.registerPoints(fMat);
+    const fPts = new THREE.Points(fGeo, fMat); fPts.frustumCulled = false; fPts.renderOrder = 6; S.onGroup.add(fPts);
+    const fLabel = makeLabel('내일 기름 예상 위치', { size: 0.34, color: '#1F4FB0' }); S.onGroup.add(fLabel);
+
+    // 방정식이 없으면: 물음표
+    const qs = [0, 1, 2].map(() => { const q = makeLabel('?', { size: 0.62, color: '#C4331A', bg: 'rgba(255,255,255,0.9)' }); S.offGroup.add(q); return q; });
+
+    let t = 0, released = 0, fcTimer = 0;
+    const dummy = new THREE.Object3D();
+    function reset() { t = 0; released = 0; A.st.fill(0); B.st.fill(0); fAl.fill(0); }
+    const SETS = [A, B];
+    function simulate(dt) {
+      t += dt;
+      if (t > DUR) reset();
+      const want = Math.min(N, Math.floor(Math.min(t, RELEASE) / RELEASE * N));
+      while (released < want) {
+        const a = hash(released, 3) * Math.PI * 2, r = 0.35 * Math.sqrt(hash(released, 4));
+        const x = TANK[0] + 0.55 + r * Math.cos(a), z = TANK[1] + 0.1 + r * Math.sin(a);
+        A.x[released] = B.x[released] = x; A.z[released] = B.z[released] = z; A.st[released] = B.st[released] = 1; released++;
+      }
+      const sd = Math.sqrt(2 * 0.011 * dt);
+      for (let i = 0; i < released; i++) {
+        const nx = sd * (Math.random() + Math.random() + Math.random() - 1.5) * 1.4, nz = sd * (Math.random() + Math.random() + Math.random() - 1.5) * 1.4;
+        for (const P of SETS) {
+          if (P.st[i] !== 1) continue;
+          current(P.x[i], P.z[i], t, o2);
+          P.x[i] += o2[0] * dt + nx; P.z[i] += o2[1] * dt + nz;
+          if (P === B && P.z[i] > BOOM[0] && P.z[i] < BOOM[1] && P.x[i] >= boomX(P.z[i]) - 0.04) { P.st[i] = 3; P.x[i] = boomX(P.z[i]) - 0.06 - 0.18 * hash(i, 9); continue; }
+          if (P.x[i] >= coastX(P.z[i]) - 0.08) { P.st[i] = 2; P.x[i] = coastX(P.z[i]) + 0.05 + 0.25 * hash(i, 5); }
         }
-        draw();
-        if (!ball.done) raf = requestAnimationFrame(frame);
-      };
-      raf = requestAnimationFrame(frame);
+      }
+      for (let i = 0; i < SN; i++) {
+        current(sx[i], sz[i], t, o2);
+        sx[i] += o2[0] * dt * 1.6; sz[i] += o2[1] * dt * 1.6; sage[i] += dt;
+        if (sage[i] > slife[i] || sx[i] > coastX(sz[i]) - 0.3 || sz[i] < -7.5 || sz[i] > 7.5) respawnStreak(i);
+      }
+      fcTimer += dt;
     }
-    btn.addEventListener('click', kick);
-    spinIn.addEventListener('input', () => { makePreview(); if (!ball || ball.done) { ball = null; path = []; } draw(); });
-    onTheme(draw); onEq(draw);
-    if ('ResizeObserver' in window) new ResizeObserver(draw).observe(canvas);
-    makePreview(); draw();
+    function visuals() {
+      // 입자 → 인스턴스
+      for (const [P, M] of [[A, meshA], [B, meshB]]) {
+        for (let i = 0; i < N; i++) {
+          if (!P.st[i]) { dummy.scale.setScalar(0.0001); dummy.position.set(0, -5, 0); }
+          else {
+            const x = P.x[i], z = P.z[i];
+            const y = P.st[i] === 2 ? height(x, z) + 0.02 : wave(x, z, t) + 0.045;
+            dummy.position.set(x, y, z); dummy.scale.setScalar(sizeJ[i] * (P.st[i] === 2 ? 1.2 : 1));
+          }
+          dummy.updateMatrix(); M.setMatrixAt(i, dummy.matrix);
+        }
+        M.instanceMatrix.needsUpdate = true;
+      }
+      // 바다 물결
+      sea.userData.update((x, z) => wave(x, z, t));
+      tanker.position.y = wave(TANK[0], TANK[1], t) * 0.6;
+      // 해류 화살표
+      for (let i = 0; i < SN; i++) {
+        current(sx[i], sz[i], t, o2);
+        const L = 0.55, sp = Math.hypot(o2[0], o2[1]) + 1e-4, y = 0.09;
+        streakPos[i * 6] = sx[i]; streakPos[i * 6 + 1] = y; streakPos[i * 6 + 2] = sz[i];
+        streakPos[i * 6 + 3] = sx[i] - o2[0] / sp * L; streakPos[i * 6 + 4] = y; streakPos[i * 6 + 5] = sz[i] - o2[1] / sp * L;
+      }
+      streakGeo.attributes.position.needsUpdate = true;
+      // 예측 점
+      if (fcTimer > 0.4) {
+        fcTimer = 0; let k = 0;
+        for (let i = 0; i < released && k < FN; i += 3) {
+          if (B.st[i] !== 1) continue;
+          let x = B.x[i], z = B.z[i], tt = t;
+          for (let s = 0; s < 30; s++) {
+            current(x, z, tt, o2); x += o2[0] * 0.3; z += o2[1] * 0.3; tt += 0.3;
+            if (z > BOOM[0] && z < BOOM[1] && x >= boomX(z) - 0.04) { x = boomX(z) - 0.08; break; }
+            if (x >= coastX(z) - 0.08) { x = coastX(z) - 0.05; break; }
+          }
+          fPos[k * 3] = x; fPos[k * 3 + 1] = 0.1; fPos[k * 3 + 2] = z; fAl[k] = 0.55; k++;
+        }
+        for (; k < FN; k++) fAl[k] = 0;
+        fGeo.attributes.position.needsUpdate = true; fGeo.attributes.aAlpha.needsUpdate = true;
+      }
+      // 기름 무리 중심 → 물음표, 예측 라벨
+      let cx = 0, cz = 0, c = 0, maxX = -1e9, fz = 0;
+      for (let i = 0; i < released; i++) if (A.st[i] === 1) { cx += A.x[i]; cz += A.z[i]; c++; if (A.x[i] > maxX) { maxX = A.x[i]; fz = A.z[i]; } }
+      qs.forEach((q, k) => {
+        q.visible = c > 20;
+        if (c) q.position.set(maxX + 0.6 + k * 0.7, 0.9 + 0.12 * Math.sin(t * 2 + k * 2), fz - 0.9 + k * 0.9);
+      });
+      let fx = 0, fz2 = 0, fc = 0;
+      for (let k = 0; k < FN; k++) if (fAl[k] > 0) { fx = Math.max(fx, fPos[k * 3]); fz2 += fPos[k * 3 + 2]; fc++; }
+      fLabel.visible = fc > 10; if (fc) fLabel.position.set(fx - 1.6, 1.05, fz2 / fc + 1.1);
+      // 상태 글
+      const days = t / 9;
+      timeEl.textContent = t < 0.6 ? '사고 직후' : `사고 후 ${days.toFixed(1)}일`;
+      let beachA = 0, beachB = 0, heldB = 0;
+      for (let i = 0; i < released; i++) { if (A.st[i] === 2) beachA++; if (B.st[i] === 2) beachB++; if (B.st[i] === 3) heldB++; }
+      const pA = released ? Math.round(beachA / N * 100) : 0, pB = released ? Math.round(beachB / N * 100) : 0;
+      statusOff.textContent = beachA < 5 ? '기름이 어디로 갈지 모릅니다' : `해안에 닿은 기름 ${pA}% · 해변과 마을이 오염됐습니다`;
+      statusOn.textContent = heldB < 5 ? '닿을 해안을 예측해 앞바다에 오일펜스를 쳤습니다' : `해안에 닿은 기름 ${pB}% · 대부분 바다에서 막았습니다`;
+    }
+    function step(dt) { simulate(dt); visuals(); }
+    for (let k = 0; k < 11 * 30; k++) simulate(1 / 30);
+    fcTimer = 1; visuals();
+    const view = new View(stage, () => S.render(view));
+    S.idle = () => S.render(view);
+    const start = runLoop(stage, S, view, step);
+    S.render(view);
+    stage.closest('section').querySelector('[data-replay]').addEventListener('click', () => { reset(); start(); });
+  })();
+
+  /* =========================================================
+     바람: 태풍
+     ========================================================= */
+  (function stormScene() {
+    const stage = document.getElementById('stormStage');
+    if (!has3D) { stage.classList.add('no3d'); return; }
+    const S = makeStage(stage, { orbit: { theta: -0.35, phi: 0.95, r: 16, target: new THREE.Vector3(-0.4, 0, 0.9) } });
+    if (!S) return;
+    const { scene } = S;
+    const statusOff = stage.querySelector('[data-status="off"]'), statusOn = stage.querySelector('[data-status="on"]'), timeEl = stage.querySelector('[data-time]');
+
+    const coastZ = x => -2.0 - 0.5 * Math.sin(x * 0.5 + 0.8) + 2.2 * Math.exp(-(((x - 2.6) / 1.1) ** 2));
+    const dist = (x, z) => coastZ(x) - z;
+    const height = (x, z) => {
+      const d = dist(x, z);
+      if (d < 0) return Math.max(-1.2, -0.04 + d * 0.28);
+      const m = Math.pow(Math.max(0, d - 1.1), 1.1) * (0.4 + 0.4 * noise(x * 0.6, z * 0.6));
+      return 0.05 + 0.16 * smooth(0, 0.6, d) + Math.min(m, 2.6);
+    };
+    scene.add(buildTerrain(height, dist));
+    const sea = buildSea(); scene.add(sea);
+
+    // 도시
+    const bMat = [new THREE.MeshLambertMaterial({ color: 0xCDD5DC }), new THREE.MeshLambertMaterial({ color: 0xA7B3BE }), new THREE.MeshLambertMaterial({ color: 0xE6E1D6 })];
+    for (let k = 0; k < 22; k++) {
+      const x = 1.95 + hash(k, 11) * 1.35, z = -2.3 + hash(k, 12) * 1.7;
+      if (dist(x, z) < 0.35) continue;
+      const h = 0.22 + hash(k, 13) * 0.7, b = new THREE.Mesh(new THREE.BoxGeometry(0.2, h, 0.2), bMat[k % 3]);
+      b.position.set(x, height(x, z) + h / 2, z); scene.add(b);
+    }
+    const cityLabel = makeLabel('해안 도시', { size: 0.4 }); cityLabel.position.set(2.6, 1.9, -1.6); scene.add(cityLabel);
+    // 항구
+    const HX = 1.3, HZ = coastZ(1.3);
+    const pier = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.06, 0.9), new THREE.MeshLambertMaterial({ color: 0x8E8A80 }));
+    pier.position.set(HX, 0.06, HZ + 0.4); scene.add(pier);
+    const portLabel = makeLabel('항구', { size: 0.34 }); portLabel.position.set(HX - 0.3, 0.8, HZ + 0.4); scene.add(portLabel);
+
+    // 배: 방정식이 있으면 항구에, 없으면 바다에
+    const SEA_BOATS = [[-2.5, 1.5], [-1.0, 0.25], [0.45, -0.7], [-3.6, 2.9]];
+    const boatsOn = SEA_BOATS.map((_, k) => { const b = boat(0xF4F4F4, 0x2F5D8A, 1.4); b.position.set(HX + (k < 2 ? -0.2 : 0.2), 0, HZ + 0.2 + (k % 2) * 0.35); b.rotation.y = Math.PI / 2; S.onGroup.add(b); return b; });
+    const boatsOff = SEA_BOATS.map(([x, z], k) => { const b = boat(0xF4F4F4, 0x2F5D8A, 1.4); b.position.set(x, 0, z); b.rotation.y = k * 1.3; b.userData = { hit: 0, x, z }; S.offGroup.add(b); return b; });
+    const safeLabel = makeLabel('배는 모두 항구로', { size: 0.34, color: '#08756A' }); safeLabel.position.set(HX - 1.5, 0.9, HZ + 0.5); S.onGroup.add(safeLabel);
+
+    // 태풍 경로
+    const P0 = [2.2, 6.0], P1 = [-5.4, 1.2], P2 = [2.6, -1.2];
+    const bez = s => { const a = (1 - s) * (1 - s), b = 2 * (1 - s) * s, c = s * s; return [a * P0[0] + b * P1[0] + c * P2[0], a * P0[1] + b * P1[1] + c * P2[1]]; };
+    const PATH_T = 27, HOLD = 5;
+
+    // 구름
+    const CN = 1500, cr = new Float32Array(CN), carm = new Float32Array(CN), cj = new Float32Array(CN), cbg = new Uint8Array(CN), cth = new Float32Array(CN);
+    const cPos = new Float32Array(CN * 3), cCol = new Float32Array(CN * 3), cAl = new Float32Array(CN), cSz = new Float32Array(CN);
+    const spawnCloud = (i, outer) => {
+      cbg[i] = Math.random() < 0.3 ? 1 : 0;
+      cr[i] = outer ? 3.3 + Math.random() * 0.6 : 0.33 + 3.5 * Math.pow(Math.random(), 1.35);
+      carm[i] = Math.floor(Math.random() * 4); cj[i] = (Math.random() - 0.5) * (cbg[i] ? 6.28 : 0.55); cth[i] = Math.random() * 6.28;
+      cSz[i] = (cbg[i] ? 0.75 : 0.5) + Math.random() * 0.4 + cr[i] * 0.07;
+    };
+    for (let i = 0; i < CN; i++) spawnCloud(i, false);
+    const cGeo = new THREE.BufferGeometry();
+    cGeo.setAttribute('position', new THREE.BufferAttribute(cPos, 3)); cGeo.setAttribute('aColor', new THREE.BufferAttribute(cCol, 3));
+    cGeo.setAttribute('aAlpha', new THREE.BufferAttribute(cAl, 1)); cGeo.setAttribute('aSize', new THREE.BufferAttribute(cSz, 1));
+    const cMat = pointsMaterial(); S.registerPoints(cMat);
+    const clouds = new THREE.Points(cGeo, cMat); clouds.frustumCulled = false; clouds.renderOrder = 8; scene.add(clouds);
+    S.swaps.push(on => { cMat.uniforms.uFade.value = on ? 0.45 : 1; });
+
+    // 바람(방정식이 있으면)
+    const WN = 520, wx = new Float32Array(WN), wz = new Float32Array(WN), wage = new Float32Array(WN), wlife = new Float32Array(WN);
+    const dashGeo = new THREE.PlaneGeometry(1, 0.05); dashGeo.rotateX(-Math.PI / 2);
+    const winds = new THREE.InstancedMesh(dashGeo, new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide }), WN);
+    winds.instanceMatrix.setUsage(THREE.DynamicDrawUsage); winds.frustumCulled = false; winds.renderOrder = 9;
+    const wc = new THREE.Color();
+    for (let i = 0; i < WN; i++) winds.setColorAt(i, wc.setRGB(1, 1, 1));
+    S.onGroup.add(winds);
+    const wDummy = new THREE.Object3D();
+
+    // 예상 경로(방정식이 있으면)
+    const dotGeo = new THREE.SphereGeometry(0.075, 10, 8);
+    const pastDots = new THREE.InstancedMesh(dotGeo, new THREE.MeshBasicMaterial({ color: 0x1B2530, depthTest: false, transparent: true }), 30);
+    const futDots = new THREE.InstancedMesh(dotGeo, new THREE.MeshBasicMaterial({ color: 0x1F55D6, depthTest: false, transparent: true }), 40);
+    [pastDots, futDots].forEach(m => { m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); m.frustumCulled = false; m.renderOrder = 12; });
+    scene.add(pastDots); S.onGroup.add(futDots);
+    const dDummy = new THREE.Object3D();
+    const coneGeo = new THREE.BufferGeometry(), conePos = new Float32Array(41 * 2 * 3), coneIdx = [];
+    for (let k = 0; k < 40; k++) { const a = k * 2; coneIdx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+    coneGeo.setAttribute('position', new THREE.BufferAttribute(conePos, 3)); coneGeo.setIndex(coneIdx);
+    const cone = new THREE.Mesh(coneGeo, new THREE.MeshBasicMaterial({ color: 0x3B6FE0, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, depthTest: false })); cone.frustumCulled = false; cone.renderOrder = 11; S.onGroup.add(cone);
+    const dayLabels = [1, 2, 3].map(d => { const l = makeLabel(`+${d}일`, { size: 0.36, color: '#1F4FB0' }); S.onGroup.add(l); return l; });
+    const landfall = makeLabel('상륙 예상 지점', { size: 0.36, color: '#B3301A' }); landfall.position.set(P2[0] + 1.3, 0.9, P2[1] + 0.2); S.onGroup.add(landfall);
+    const lfRing = new THREE.Mesh(new THREE.RingGeometry(0.28, 0.4, 32), new THREE.MeshBasicMaterial({ color: 0xE0442A, side: THREE.DoubleSide, depthTest: false, transparent: true })); lfRing.renderOrder = 12; lfRing.rotation.x = -Math.PI / 2; lfRing.position.set(P2[0], height(P2[0], P2[1]) + 0.05, P2[1]); S.onGroup.add(lfRing);
+    const qs = [0, 1, 2, 3].map(() => { const q = makeLabel('?', { size: 0.66, color: '#C4331A', bg: 'rgba(255,255,255,0.9)' }); S.offGroup.add(q); return q; });
+
+    let t = 0, cx = P0[0], cz = P0[1];
+    const tmpv = [0, 0];
+    function resetStorm() { t = 0; boatsOff.forEach(b => { b.userData.hit = 0; }); }
+    function spawnWind(i) { const a = Math.random() * 6.28, r = 0.4 + 5 * Math.sqrt(Math.random()); wx[i] = cx + r * Math.cos(a); wz[i] = cz + r * Math.sin(a); wage[i] = 0; wlife[i] = 0.8 + Math.random() * 1.6; }
+    for (let i = 0; i < WN; i++) spawnWind(i);
+    const Rm = 0.6, Vmax = 2.4;
+    function windAt(x, z, o) {
+      const dx = x - cx, dz = z - cz, r = Math.hypot(dx, dz) + 1e-4;
+      const vt = r < Rm ? Vmax * r / Rm : Vmax * Math.pow(Rm / r, 0.6);
+      const vr = r < Rm ? 0.1 * vt : -0.32 * vt;
+      o[0] = (dz / r) * vt + (dx / r) * vr; o[1] = (-dx / r) * vt + (dz / r) * vr;
+      return vt;
+    }
+    const cSlow = [0.25, 0.45, 0.9], cMid = [0.95, 0.66, 0.2], cHot = [0.88, 0.2, 0.12];
+    function step(dt) {
+      t += dt;
+      if (t > PATH_T + HOLD) resetStorm();
+      const s = clamp(t / PATH_T, 0, 1), c = bez(s), c2 = bez(Math.min(s + 0.002, 1));
+      const mvx = (c2[0] - c[0]) / (PATH_T * 0.002), mvz = (c2[1] - c[1]) / (PATH_T * 0.002);
+      cx = c[0]; cz = c[1];
+      const overLand = dist(cx, cz) > 0.2, weaken = overLand ? clamp(1 - (t - PATH_T * 0.97) / HOLD, 0.35, 1) : 1;
+      // 구름
+      for (let i = 0; i < CN; i++) {
+        cr[i] -= dt * (0.08 + 0.03 * cr[i]);
+        if (cr[i] < 0.33) spawnCloud(i, true);
+        const r = cr[i];
+        const th = cbg[i] ? cth[i] - 0.45 * t * (1.2 / (1 + 0.3 * r)) : carm[i] * Math.PI / 2 + 1.3 * Math.log(r / 0.33) + cj[i] - 0.45 * t;
+        const y = 1.0 + 0.55 * Math.exp(-((r - 0.5) ** 2) / 0.08) + 0.12 * Math.sin(th * 3 + r) - 0.14 * r / 3.8;
+        cPos[i * 3] = cx + r * Math.cos(th); cPos[i * 3 + 1] = y; cPos[i * 3 + 2] = cz + r * Math.sin(th);
+        const g = 1 - 0.18 * (r / 3.8);
+        cCol[i * 3] = g; cCol[i * 3 + 1] = g; cCol[i * 3 + 2] = g + 0.02;
+        const edge = 1 - smooth(3.0, 3.9, r);
+        cAl[i] = (cbg[i] ? 0.09 : 0.2) * edge * weaken * (r < 0.62 ? 1.6 : 1);
+      }
+      cGeo.attributes.position.needsUpdate = true; cGeo.attributes.aColor.needsUpdate = true; cGeo.attributes.aAlpha.needsUpdate = true;
+      // 바람
+      for (let i = 0; i < WN; i++) {
+        const vt = windAt(wx[i], wz[i], tmpv) * weaken;
+        const vx = tmpv[0] * weaken + mvx, vz = tmpv[1] * weaken + mvz;
+        wx[i] += vx * dt; wz[i] += vz * dt; wage[i] += dt;
+        const r = Math.hypot(wx[i] - cx, wz[i] - cz);
+        if (wage[i] > wlife[i] || r > 5.6 || r < 0.35) spawnWind(i);
+        const L = 0.14 + 0.34 * vt / Vmax, k = vt / Vmax;
+        wDummy.position.set(wx[i] - vx / (Math.hypot(vx, vz) + 1e-4) * L * 0.5, 0.16, wz[i] - vz / (Math.hypot(vx, vz) + 1e-4) * L * 0.5);
+        wDummy.rotation.set(0, Math.atan2(-vz, vx), 0); wDummy.scale.set(L, 1, 1 + k); wDummy.updateMatrix();
+        winds.setMatrixAt(i, wDummy.matrix);
+        if (k < 0.5) wc.setRGB(lerp(cSlow[0], cMid[0], k * 2), lerp(cSlow[1], cMid[1], k * 2), lerp(cSlow[2], cMid[2], k * 2));
+        else wc.setRGB(lerp(cMid[0], cHot[0], (k - 0.5) * 2), lerp(cMid[1], cHot[1], (k - 0.5) * 2), lerp(cMid[2], cHot[2], (k - 0.5) * 2));
+        winds.setColorAt(i, wc);
+      }
+      winds.instanceMatrix.needsUpdate = true; winds.instanceColor.needsUpdate = true;
+      // 물결: 태풍 가까이에서 높게
+      sea.userData.update((x, z) => {
+        const d2 = (x - cx) ** 2 + (z - cz) ** 2, amp = 0.03 + 0.2 * Math.exp(-d2 / 3) * weaken;
+        return amp * Math.sin(0.9 * x + 1.6 * t) + amp * 0.7 * Math.sin(1.3 * z - 1.2 * t + x * 0.4);
+      });
+      // 지난 경로 / 예상 경로 / 불확실성 원뿔
+      for (let k = 0; k < 30; k++) { const q = bez(s * k / 29); dDummy.position.set(q[0], 0.14, q[1]); dDummy.scale.setScalar(s > 0.01 ? 0.8 : 0.0001); dDummy.updateMatrix(); pastDots.setMatrixAt(k, dDummy.matrix); }
+      pastDots.instanceMatrix.needsUpdate = true;
+      for (let k = 0; k < 40; k++) { const q = bez(s + (1 - s) * (k + 1) / 40); dDummy.position.set(q[0], 0.16, q[1]); dDummy.scale.setScalar(s < 0.995 ? 1 : 0.0001); dDummy.updateMatrix(); futDots.setMatrixAt(k, dDummy.matrix); }
+      futDots.instanceMatrix.needsUpdate = true;
+      for (let k = 0; k <= 40; k++) {
+        const u = s + (1 - s) * k / 40, q = bez(u), q2 = bez(Math.min(u + 0.01, 1)), q0 = bez(Math.max(u - 0.01, 0));
+        let tx = q2[0] - q0[0], tz = q2[1] - q0[1]; const tl = Math.hypot(tx, tz) + 1e-6; tx /= tl; tz /= tl;
+        const wdt = 0.12 + 1.5 * (u - s);
+        conePos[k * 6] = q[0] - tz * wdt; conePos[k * 6 + 1] = 0.08; conePos[k * 6 + 2] = q[1] + tx * wdt;
+        conePos[k * 6 + 3] = q[0] + tz * wdt; conePos[k * 6 + 4] = 0.08; conePos[k * 6 + 5] = q[1] - tx * wdt;
+      }
+      coneGeo.attributes.position.needsUpdate = true; coneGeo.computeBoundingSphere();
+      dayLabels.forEach((l, k) => {
+        const u = s + (k + 1) / 3; l.visible = u <= 1.001;
+        if (l.visible) { const q = bez(Math.min(u, 1)); l.position.set(q[0] - 0.75, 0.6, q[1]); }
+      });
+      qs.forEach((q, k) => {
+        const a = -0.4 + k * 1.55, R = 3.3;
+        q.visible = s < 0.98;
+        q.position.set(cx + R * Math.cos(a), 1.2 + 0.12 * Math.sin(t * 2 + k), cz + R * Math.sin(a));
+      });
+      // 배
+      let lost = 0;
+      boatsOff.forEach((b, k) => {
+        const d = Math.hypot(b.userData.x - cx, b.userData.z - cz);
+        if (d < 1.4 && weaken > 0.9) b.userData.hit = Math.min(1, b.userData.hit + dt * 0.8);
+        const hit = b.userData.hit, amp = 0.06 + 0.5 * Math.exp(-d * d / 3);
+        b.rotation.z = hit * 1.9 + (1 - hit) * amp * Math.sin(t * 5 + k);
+        b.rotation.x = (1 - hit) * amp * 0.6 * Math.sin(t * 4.2 + k * 2);
+        b.position.y = -0.1 * hit + (1 - hit) * 0.05 * Math.sin(t * 3 + k);
+        if (hit > 0.5) lost++;
+      });
+      boatsOn.forEach((b, k) => { b.position.y = 0.02 * Math.sin(t * 2 + k); });
+      // 상태 글
+      timeEl.textContent = s < 0.995 ? `상륙까지 ${(3 * (1 - s)).toFixed(1)}일` : '태풍 상륙';
+      statusOff.textContent = s < 0.995
+        ? (lost ? `태풍이 갑자기 닥쳐 배 ${lost}척이 피해를 입었습니다` : '태풍이 어디로 올지 모릅니다 · 배 4척이 아직 바다에')
+        : `예고 없이 상륙 · 배 ${lost}척 피해`;
+      statusOn.textContent = s < 0.995 ? '사흘 전부터 진로를 압니다 · 배는 항구로, 주민은 대피' : '상륙했지만 미리 대비해 피해를 줄였습니다';
+    }
+    for (let k = 0; k < 3 * 30; k++) step(1 / 30);
+    const view = new View(stage, () => S.render(view));
+    S.idle = () => S.render(view);
+    const start = runLoop(stage, S, view, step);
+    S.render(view);
+    stage.closest('section').querySelector('[data-replay]').addEventListener('click', () => { resetStorm(); start(); });
   })();
 })();
 </script>
